@@ -1,30 +1,42 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Starblast.Agents
 {
     public class AgentMover : MonoBehaviour
     {
-        [Header("Movement Settings")]
-        [SerializeField] private float _rotSpeed = 320;
-        [SerializeField] private float _maxSpeed = 40;
-        [SerializeField] private float _acceleration = 10;
-        [SerializeField] private float _deceleration = 5;
-        [SerializeField] private float _thrustForce = 2.3f;
-        [SerializeField] private float _rotFactorWhileAccelerating = 0.3f;
-        
-        
+        [System.Serializable]
+        public class SpaceshipEvent : UnityEvent<float> { }
+
         [Header("References")]
-        [SerializeField] private Rigidbody2D _rigidbody;
+        public Rigidbody2D rb;
         
-        private float rotInput = 0;
-        private float thrustInput = 0;
+        [Header("Movement Settings")] 
+        public float maxSpeed = 10f;
+        public float acceleration = 5f;
+        public float rotationSpeed = 180f;
+        public float brakingForce = 5f;
+        public AnimationCurve speedToManeuverability;
+
+        [Header("Auto-Brake Settings")]
+        public float forwardAutoBrakeFactor = 0.3f;
+        public float orthogonalAutoBrakeFactor = 0.7f;
+        public float autoBrakeThreshold = 0.1f;
+
+        [Header("Boost Settings")] 
+        public float boostMultiplier = 2f;
+        public float boostDuration = 2f;
+        public float boostCooldown = 5f;
+
+        private Vector2 velocity;
+        private float currentRotation;
         
-        protected float curThrust = 0;
-        private float maxThrust = 1;
-        
+        private float thrustInput;
+        private float rotationInput;
+
         public void SetRotationInput(float input)
         {
-            rotInput = input;
+            rotationInput = input;
         }
 
         public void SetThrustInput(float input)
@@ -32,78 +44,88 @@ namespace Starblast.Agents
             thrustInput = input;
         }
         
+        private void Start()
+        {
+            rb.isKinematic = true;
+        }
+
+        private void Update()
+        {
+            HandleInput();
+        }
+
         private void FixedUpdate()
         {
-            HandleRotation();
-            HandleThrust();
+            ApplyMovement();
+            ApplyRotation();
+            ApplyDirectionalAutoBrake();
         }
-        
-        private void HandleRotation()
+
+        private void HandleInput()
         {
-            if (rotInput != 0)
+            if (thrustInput > 0)
             {
-                var new_rotation = _rigidbody.rotation - _rotSpeed * GetRotPower() * Time.fixedDeltaTime * rotInput;
-                new_rotation = NormalizeAngle(new_rotation);
-                _rigidbody.MoveRotation(new_rotation);
+                ApplyThrust(thrustInput);
+            }
+            else if (thrustInput < 0)
+            {
+                ApplyBrake(-thrustInput);
             }
 
+            currentRotation = rotationInput * rotationSpeed;
         }
-        
-        private void HandleThrust()
+
+        private void ApplyThrust(float input)
         {
-            if (IsAccelerating())
+            float accelerationThisFrame = acceleration * input;
+            velocity += (Vector2)transform.up * (accelerationThisFrame * Time.fixedDeltaTime);
+        }
+
+        private void ApplyBrake(float input)
+        {
+            velocity -= velocity.normalized * (brakingForce * input * Time.fixedDeltaTime);
+        }
+
+        private void ApplyDirectionalAutoBrake()
+        {
+            if (Mathf.Abs(thrustInput) < autoBrakeThreshold)
             {
-                curThrust = Mathf.Min(curThrust + _thrustForce * Time.fixedDeltaTime, maxThrust);
-                _rigidbody.AddForce(GetAimDir() * (_acceleration * curThrust), ForceMode2D.Impulse);
+                Vector2 forwardDirection = transform.up;
+                Vector2 orthogonalDirection = Vector2.Perpendicular(forwardDirection);
+
+                // Decompose velocity into forward and orthogonal components
+                Vector2 forwardVelocity = Vector2.Dot(velocity, forwardDirection) * forwardDirection;
+                Vector2 orthogonalVelocity = Vector2.Dot(velocity, orthogonalDirection) * orthogonalDirection;
+
+                // Apply auto-brake to each component separately
+                forwardVelocity *= (1f - forwardAutoBrakeFactor * Time.fixedDeltaTime);
+                orthogonalVelocity *= (1f - orthogonalAutoBrakeFactor * Time.fixedDeltaTime);
+
+                // Recombine the velocities
+                velocity = forwardVelocity + orthogonalVelocity;
             }
-            else
-            {
-                curThrust = 0;
-                if (IsDecelerating())
-                {
-                    // Movement in the opposite direction
-                    var velocity = _rigidbody.velocity;
-                    var oppositeDir = -velocity.normalized;
-                    // Apply the brake but not stronger than the current velocity
-                    _rigidbody.AddForce(oppositeDir * Mathf.Min(_deceleration, velocity.magnitude), ForceMode2D.Impulse);
-                }
-            }
-        }
-        
-        protected virtual float GetRotPower()
-        {
-            if (IsAccelerating())
-                return _rotFactorWhileAccelerating;
-            return 1;
         }
 
-        public bool IsAccelerating()
+        private void ApplyMovement()
         {
-            return thrustInput > 0;
-        }
-        
-        public bool IsDecelerating()
-        {
-            return thrustInput < 0;
-        }
-        
-        protected float NormalizeAngle(float ang)
-        {
-            ang = (ang + 180) % 360;
-            if (ang < 0)
-                ang += 360;
-            return ang - 180;
-        }
-        
-        public Vector2 GetVelDir()
-        {
-            return _rigidbody.velocity.normalized;
+            velocity = Vector2.ClampMagnitude(velocity, maxSpeed);
+            rb.MovePosition(rb.position + velocity * Time.fixedDeltaTime);
         }
 
-        public Vector2 GetAimDir()
+        private void ApplyRotation()
         {
-            return _rigidbody.transform.up;
+            float speedFactor = velocity.magnitude / maxSpeed;
+            float maneuverability = speedToManeuverability.Evaluate(speedFactor);
+            float rotationThisFrame = currentRotation * maneuverability * Time.fixedDeltaTime;
+            rb.MoveRotation(rb.rotation - rotationThisFrame);
         }
 
+        public Vector2 GetVelocity() => velocity;
+        
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
+            // Handle collisions here
+            velocity = Vector2.zero;
+        }
     }
 }
