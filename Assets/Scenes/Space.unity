@@ -22054,6 +22054,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1745733689}
   - component: {fileID: 1745733690}
+  - component: {fileID: 1745733691}
   m_Layer: 0
   m_Name: Weapon
   m_TagString: Untagged
@@ -22090,12 +22091,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _muzzle: {fileID: 965830277}
+  _bulletPoolManager: {fileID: 1745733691}
   OnShoot:
     m_PersistentCalls:
       m_Calls: []
   OnShootNoAmmo:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1745733691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1745733688}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6b67dd519dc4bedbb20ef09a89c6d34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1760432109
 GameObject:
   m_ObjectHideFlags: 0

@@ -50,4 +50,6 @@ namespace Starblast.Actors.Weapons
             _bulletPool = bulletPool;
         }
     }
+    
+    
 }

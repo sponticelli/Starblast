@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Starblast.Data;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Pool;
+using Random = UnityEngine.Random;
 
 namespace Starblast.Actors.Weapons
 {
@@ -14,12 +16,12 @@ namespace Starblast.Actors.Weapons
     {
         [Header("References")]
         [SerializeField] private Transform _muzzle = null!;
+        [SerializeField] private BulletPoolManager _bulletPoolManager = null!;
 
         [Header("Events")]
         [SerializeField] private UnityEvent OnShoot = null!;
         [SerializeField] private UnityEvent OnShootNoAmmo = null!;
-
-        private IObjectPool<Bullet> _bulletPool = null!;
+        
         private IVelocityProvider _velocityProvider = null!;
         private IWeaponDataProvider _weaponDataProvider = null!;
 
@@ -46,7 +48,6 @@ namespace Starblast.Actors.Weapons
             }
 
             Ammo = _weaponDataProvider.WeaponData.AmmoCapacity;
-            InitializeBulletPool();
         }
 
         private void Update() => UseWeapon();
@@ -56,38 +57,28 @@ namespace Starblast.Actors.Weapons
         /// </summary>
         public void Initialize(IWeaponDataProvider weaponDataProvider, IVelocityProvider velocityProvider)
         {
-            _weaponDataProvider = weaponDataProvider ?? throw new System.ArgumentNullException(nameof(weaponDataProvider));
-            _velocityProvider = velocityProvider ?? throw new System.ArgumentNullException(nameof(velocityProvider));
-
-            if (_muzzle != null)
+            _weaponDataProvider = weaponDataProvider ?? throw new ArgumentNullException(nameof(weaponDataProvider));
+            _velocityProvider = velocityProvider ?? throw new ArgumentNullException(nameof(velocityProvider));
+            
+            if (_bulletPoolManager == null)
             {
-                _muzzle.localPosition = _weaponDataProvider.WeaponData.MuzzleOffset;
+                Debug.LogError($"BulletPoolManager not assigned to the Weapon on GameObject: {gameObject.name}");
+                enabled = false;
+                return;
             }
-            else
+            
+            _bulletPoolManager.Initialize(_weaponDataProvider);
+
+            if (_muzzle == null)
             {
-                Debug.LogError("Muzzle transform not assigned to the Weapon.");
+                Debug.LogError($"Muzzle transform not assigned to the Weapon on GameObject: {gameObject.name}");
+                enabled = false;
+                return;
             }
-        }
 
-        private void InitializeBulletPool()
-        {
-            _bulletPool = new ObjectPool<Bullet>(
-                createFunc: CreateBullet,
-                actionOnGet: bullet => bullet.gameObject.SetActive(true),
-                actionOnRelease: bullet => bullet.gameObject.SetActive(false),
-                actionOnDestroy: bullet => Destroy(bullet.gameObject),
-                collectionCheck: false,
-                defaultCapacity: 20,
-                maxSize: 100
-            );
+            _muzzle.localPosition = _weaponDataProvider.WeaponData.MuzzleOffset;
         }
-
-        private Bullet CreateBullet()
-        {
-            var bullet = Instantiate(_weaponDataProvider.WeaponData.BulletPrefab, _muzzle.position, _muzzle.rotation);
-            bullet.Initialize(_bulletPool);
-            return bullet;
-        }
+        
 
         public void TryShooting() => _isShooting = true;
 
@@ -120,7 +111,7 @@ namespace Starblast.Actors.Weapons
 
         private void ShootBullet()
         {
-            var bullet = _bulletPool.Get();
+            var bullet = _bulletPoolManager.GetBullet();
             bullet.transform.SetPositionAndRotation(_muzzle.position, _muzzle.rotation);
 
             var direction = Quaternion.Euler(0, 0, Random.Range(-_weaponDataProvider.WeaponData.SpreadAngle, _weaponDataProvider.WeaponData.SpreadAngle)) * _muzzle.up;
