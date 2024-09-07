@@ -15,4 +15,6 @@ namespace Starblast.Data
         public float BrakingForce => _brakingForce;
         public AnimationCurve SpeedToManeuverability => _speedToManeuverability;
     }
+    
+
 }

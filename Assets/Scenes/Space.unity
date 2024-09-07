@@ -7737,6 +7737,7 @@ GameObject:
   - component: {fileID: 557112448}
   - component: {fileID: 557112447}
   - component: {fileID: 557112449}
+  - component: {fileID: 557112450}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -7760,9 +7761,11 @@ MonoBehaviour:
   _actorInput: {fileID: 1715169964}
   _movementController: {fileID: 2084801529}
   _weaponsController: {fileID: 38836836}
+  spaceshipVisualController: {fileID: 698427046}
   _bodyDataProvider: {fileID: 557112448}
   _engineDataProvider: {fileID: 557112447}
   _weaponDataProvider: {fileID: 557112449}
+  _spaceshipVisualDataProvider: {fileID: 557112450}
 --- !u!50 &557112444
 Rigidbody2D:
   serializedVersion: 4
@@ -7861,6 +7864,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _weaponData: {fileID: 11400000, guid: efa5e0e205771412da5902afe4f7da85, type: 2}
+--- !u!114 &557112450
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 557112442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33642651ff2c40a297b2f9743734bcaa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _spaceshipVisualData: {fileID: 11400000, guid: e6e1f06b524f84282a3ca3c0a1000ebf, type: 2}
 --- !u!1 &557588056
 GameObject:
   m_ObjectHideFlags: 0
@@ -9800,6 +9816,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 698427045}
+  - component: {fileID: 698427046}
   m_Layer: 0
   m_Name: VisualController
   m_TagString: Untagged
@@ -9826,6 +9843,20 @@ Transform:
   - {fileID: 987682240}
   m_Father: {fileID: 557112446}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &698427046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 698427044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 182ad62f34db47cab4b4814562cfdde6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bodyRenderer: {fileID: 1742196877}
+  engineRenderer: {fileID: 1504548666}
 --- !u!1 &726377249
 GameObject:
   m_ObjectHideFlags: 0

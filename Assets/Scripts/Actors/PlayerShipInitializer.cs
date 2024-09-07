@@ -1,4 +1,5 @@
 using Starblast.Actors.Movements;
+using Starblast.Actors.Visuals;
 using Starblast.Actors.Weapons;
 using Starblast.Data;
 using Starblast.Inputs;
@@ -15,11 +16,13 @@ namespace Starblast.Actors
         [SerializeField] private PlayerInputHandler _actorInput;
         [SerializeField] private MovementController _movementController;
         [SerializeField] private WeaponsController _weaponsController;
+        [FormerlySerializedAs("_visualController")] [SerializeField] private SpaceshipVisualController spaceshipVisualController;
 
         [Header("Data")]
         [SerializeField] private BodyDataProvider _bodyDataProvider;
         [SerializeField] private EngineDataProvider _engineDataProvider;
         [SerializeField] private WeaponDataProvider _weaponDataProvider;
+        [SerializeField] private SpaceshipVisualDataProvider _spaceshipVisualDataProvider;
         
         
         private void Awake()
@@ -35,6 +38,9 @@ namespace Starblast.Actors
             
             var weaponControllerContext = new WeaponsControllerContext(_movementController, _actorInput, _weaponDataProvider);
             _weaponsController.Initialize(weaponControllerContext);
+            
+            var visualControllerContext = new SpaceshipVisualControllerContext(_actorInput, _spaceshipVisualDataProvider);
+            spaceshipVisualController.Initialize(visualControllerContext);
         }
     }
 }
