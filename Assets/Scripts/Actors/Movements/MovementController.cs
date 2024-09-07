@@ -18,6 +18,10 @@ namespace Starblast.Actors.Movements
         private IBodyDataProvider _bodyDataProvider;
         private IEngineDataProvider _engineDataProvider;
 
+        // Cache for frequently used components
+        private Rigidbody2D _cachedRigidbody;
+        private Transform _cachedTransform;
+
         public void Initialize(IMovementControllerContext context)
         {
             _bodyDataProvider = context.BodyDataProvider;
@@ -26,6 +30,10 @@ namespace Starblast.Actors.Movements
             _rbProvider = context.Rigidbody2DProvider;
             _inputHandler = context.InputHandler;
             
+            // Cache the Rigidbody2D and Transform components
+            _cachedRigidbody = _rbProvider.GetRigidbody2D();
+            _cachedTransform = transform;
+
             StopListeningToInput();
             _inputHandler = context.InputHandler;
             ListenToInput();
@@ -76,7 +84,7 @@ namespace Starblast.Actors.Movements
         private void ApplyThrust(float input)
         {
             var accelerationThisFrame = _engineDataProvider.EngineData.Acceleration * input;
-            _velocity += (Vector2)transform.up * (accelerationThisFrame * Time.fixedDeltaTime);
+            _velocity += (Vector2)_cachedTransform.up * (accelerationThisFrame * Time.fixedDeltaTime);
         }
 
         private void ApplyBrake(float input)
@@ -88,7 +96,7 @@ namespace Starblast.Actors.Movements
         {
             if (!(Mathf.Abs(_thrustInput) < _bodyDataProvider.BodyData.AutoBrakeThreshold)) return;
             
-            Vector2 forwardDirection = _rbProvider.GetRigidbody2D().transform.up;
+            Vector2 forwardDirection = _cachedTransform.up;
             var orthogonalDirection = Vector2.Perpendicular(forwardDirection);
 
             // Decompose velocity into forward and orthogonal components
@@ -105,19 +113,17 @@ namespace Starblast.Actors.Movements
 
         private void ApplyMovement()
         {
-            var rb = _rbProvider.GetRigidbody2D();
             _velocity = Vector2.ClampMagnitude(_velocity, _engineDataProvider.EngineData.MaxSpeed);
-            rb.MovePosition(rb.position + _velocity * Time.fixedDeltaTime);
+            _cachedRigidbody.MovePosition(_cachedRigidbody.position + _velocity * Time.fixedDeltaTime);
         }
 
         private void ApplyRotation()
         {
-            var rb = _rbProvider.GetRigidbody2D();
             var engineData = _engineDataProvider.EngineData;
             var speedFactor = _velocity.magnitude / engineData.MaxSpeed;
             var maneuverability = engineData.SpeedToManeuverability.Evaluate(speedFactor);
             var rotationThisFrame = _currentRotation * maneuverability * Time.fixedDeltaTime;
-            rb.MoveRotation(rb.rotation - rotationThisFrame);
+            _cachedRigidbody.MoveRotation(_cachedRigidbody.rotation - rotationThisFrame);
         }
         
         #region Input Handling
@@ -131,7 +137,6 @@ namespace Starblast.Actors.Movements
             get { return value => _thrustInput = value; }
         }
         
-        
         private void ListenToInput()
         {
             if (_inputHandler == null) return;
@@ -144,7 +149,6 @@ namespace Starblast.Actors.Movements
             if (_inputHandler == null) return;
             _inputHandler.OnRotate -= OnRotate;
             _inputHandler.OnThrust -= OnThrust;
-            
         }
         #endregion
     }

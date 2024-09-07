@@ -15,6 +15,14 @@ namespace Starblast.Actors.Visuals
         private float _currentRotation;
         private float _rotationInput;
         
+        #region cached values
+        private Transform _cachedTransform;
+        private float _cachedMaxAngle;
+        private float _cachedRotationSpeed;
+        private float _cachedReturnToZeroFactor;
+        private float _cachedReturnSpeed;
+        #endregion
+        
         public void Initialize(ISpaceshipVisualControllerContext context)
         {
             this._context = context;
@@ -24,6 +32,12 @@ namespace Starblast.Actors.Visuals
             StopListeningInput();
             _actorInputHandler = context.ActorInputHandler;
             StartListeningInput();
+            
+            _cachedTransform = transform;
+            _cachedMaxAngle = context.VisualDataProvider.VisualData.MaxRotationAngle;
+            _cachedRotationSpeed = context.VisualDataProvider.VisualData.RotationSpeed;
+            _cachedReturnToZeroFactor = context.VisualDataProvider.VisualData.ReturnToZeroFactor;
+            _cachedReturnSpeed = _cachedRotationSpeed * _cachedReturnToZeroFactor; 
         }
         
         private void OnEnable()
@@ -60,29 +74,25 @@ namespace Starblast.Actors.Visuals
 
         private void HandleRotation()
         {
-            float maxAngle = _context.VisualDataProvider.VisualData.MaxRotationAngle;
-            float rotationSpeed = _context.VisualDataProvider.VisualData.RotationSpeed;
-
             if (_rotationInput != 0)
             {
                 // Calculate rotation change based on input
-                float rotationChange = _rotationInput * rotationSpeed * Time.deltaTime;
+                float rotationChange = _rotationInput * _cachedRotationSpeed * Time.deltaTime;
 
                 // Update current rotation
                 _currentRotation += rotationChange;
 
                 // Clamp the rotation to the allowed range
-                _currentRotation = Mathf.Clamp(_currentRotation, -maxAngle, maxAngle);
+                _currentRotation = Mathf.Clamp(_currentRotation, -_cachedMaxAngle, _cachedMaxAngle);
             }
             else
             {
                 // Rotate back to 0 when there's no input
-                float returnSpeed = rotationSpeed * _context.VisualDataProvider.VisualData.ReturnToZeroFactor; 
-                _currentRotation = Mathf.MoveTowards(_currentRotation, 0, returnSpeed * Time.deltaTime);
+                _currentRotation = Mathf.MoveTowards(_currentRotation, 0, _cachedReturnSpeed * Time.deltaTime);
             }
 
             // Apply the rotation only to the Y-axis
-            transform.localRotation = Quaternion.Euler(0f, _currentRotation, 0f);
+            _cachedTransform.localRotation = Quaternion.Euler(0f, _currentRotation, 0f);
         }
     }
 }
