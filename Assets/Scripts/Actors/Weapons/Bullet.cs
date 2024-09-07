@@ -21,7 +21,7 @@ namespace Starblast.Actors.Weapons
             _shipVelocity = shipVelocity;
             _direction = direction.normalized;
             _currentLifeTime = _lifeTime;
-            _rigidbody.velocity = _shipVelocity +  _direction * _speed;
+            
         }
 
         
@@ -32,6 +32,11 @@ namespace Starblast.Actors.Weapons
             {
                 Destroy(gameObject);
             }
+        }
+        
+        private void FixedUpdate()
+        {
+            _rigidbody.velocity = (_direction * _speed) + _shipVelocity;
         }
         
     }
