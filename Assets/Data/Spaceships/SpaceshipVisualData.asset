@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da39a720bea54130b20d1793efc5be6a, type: 3}
   m_Name: SpaceshipVisualData
   m_EditorClassIdentifier: 
-  _bodySprite: {fileID: -1051637807, guid: 2b0ff801841204218bb5f696ac363fbe, type: 3}
-  _engineSprite: {fileID: -96765594, guid: 2b0ff801841204218bb5f696ac363fbe, type: 3}
-  _maxRotationAngle: 45
-  _rotationSpeed: 40
+  <BodySprite>k__BackingField: {fileID: -1051637807, guid: 2b0ff801841204218bb5f696ac363fbe, type: 3}
+  <EngineSprite>k__BackingField: {fileID: -2054322145, guid: 2b0ff801841204218bb5f696ac363fbe, type: 3}
+  <MaxRotationAngle>k__BackingField: 45
+  <RotationSpeed>k__BackingField: 40
+  <ReturnToZeroFactor>k__BackingField: 3
