@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Starblast.Data;
+using Starblast.Data.Spaceships.Weapons;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Pool;
@@ -32,11 +33,11 @@ namespace Starblast.Actors.Weapons
         public int Ammo
         {
             get => _ammo;
-            set => _ammo = Mathf.Clamp(value, 0, _weaponDataProvider?.WeaponData.AmmoCapacity ?? 0);
+            set => _ammo = Mathf.Clamp(value, 0, _weaponDataProvider?.Data.AmmoCapacity ?? 0);
         }
 
         public bool AmmoEmpty => Ammo <= 0;
-        public bool AmmoFull => Ammo >= _weaponDataProvider?.WeaponData.AmmoCapacity;
+        public bool AmmoFull => Ammo >= _weaponDataProvider?.Data.AmmoCapacity;
 
         private void Start()
         {
@@ -47,7 +48,7 @@ namespace Starblast.Actors.Weapons
                 return;
             }
 
-            Ammo = _weaponDataProvider.WeaponData.AmmoCapacity;
+            Ammo = _weaponDataProvider.Data.AmmoCapacity;
         }
 
         private void Update() => UseWeapon();
@@ -76,7 +77,7 @@ namespace Starblast.Actors.Weapons
                 return;
             }
 
-            _muzzle.localPosition = _weaponDataProvider.WeaponData.MuzzleOffset;
+            _muzzle.localPosition = _weaponDataProvider.Data.MuzzleOffset;
         }
         
 
@@ -93,7 +94,7 @@ namespace Starblast.Actors.Weapons
             Ammo--;
             OnShoot?.Invoke();
 
-            for (int i = 0; i < _weaponDataProvider.WeaponData.GetBulletCountToSpawn; i++)
+            for (int i = 0; i < _weaponDataProvider.Data.GetBulletCountToSpawn; i++)
             {
                 ShootBullet();
             }
@@ -114,14 +115,14 @@ namespace Starblast.Actors.Weapons
             var bullet = _bulletPoolManager.GetBullet();
             bullet.transform.SetPositionAndRotation(_muzzle.position, _muzzle.rotation);
 
-            var direction = Quaternion.Euler(0, 0, Random.Range(-_weaponDataProvider.WeaponData.SpreadAngle, _weaponDataProvider.WeaponData.SpreadAngle)) * _muzzle.up;
+            var direction = Quaternion.Euler(0, 0, Random.Range(-_weaponDataProvider.Data.SpreadAngle, _weaponDataProvider.Data.SpreadAngle)) * _muzzle.up;
             bullet.Shoot(direction, _velocityProvider.GetVelocity());
         }
 
         private void FinishShooting()
         {
             StartCoroutine(DelayNextShootCoroutine());
-            if (!_weaponDataProvider.WeaponData.AutomaticFire)
+            if (!_weaponDataProvider.Data.AutomaticFire)
             {
                 _isShooting = false;
             }
@@ -130,7 +131,7 @@ namespace Starblast.Actors.Weapons
         private IEnumerator DelayNextShootCoroutine()
         {
             _isReloading = true;
-            yield return new WaitForSeconds(_weaponDataProvider.WeaponData.WeaponDelay);
+            yield return new WaitForSeconds(_weaponDataProvider.Data.WeaponDelay);
             _isReloading = false;
         }
 

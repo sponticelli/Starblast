@@ -2,6 +2,11 @@ using Starblast.Actors.Movements;
 using Starblast.Actors.Visuals;
 using Starblast.Actors.Weapons;
 using Starblast.Data;
+using Starblast.Data.Spaceships;
+using Starblast.Data.Spaceships.Bodies;
+using Starblast.Data.Spaceships.Engines;
+using Starblast.Data.Spaceships.Visuals;
+using Starblast.Data.Spaceships.Weapons;
 using Starblast.Inputs;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -16,14 +21,10 @@ namespace Starblast.Actors
         [SerializeField] private PlayerInputHandler _actorInput;
         [SerializeField] private MovementController _movementController;
         [SerializeField] private WeaponsController _weaponsController;
-        [FormerlySerializedAs("_visualController")] [SerializeField] private SpaceshipVisualController spaceshipVisualController;
-
-        [Header("Data")]
-        [SerializeField] private BodyDataProvider _bodyDataProvider;
-        [SerializeField] private EngineDataProvider _engineDataProvider;
-        [SerializeField] private WeaponDataProvider _weaponDataProvider;
-        [SerializeField] private SpaceshipVisualDataProvider _spaceshipVisualDataProvider;
+        [SerializeField] private SpaceshipVisualController _spaceshipVisualController;
         
+        [Header("Data")]
+        [SerializeField] private MBSpaceshipDataProvider _spaceshipDataProvider;
         
         private void Awake()
         {
@@ -32,15 +33,24 @@ namespace Starblast.Actors
 
         private void Initialize()
         {
-            var movementControllerContext = new MovementControllerContext(_bodyDataProvider, _engineDataProvider, 
+            var spaceshipData = _spaceshipDataProvider.Data;
+            
+            var movementControllerContext = new MovementControllerContext(
+                new SpaceshipBodyDataProvider(spaceshipData.SpaceshipBodyData), 
+                new SpaceshipEngineDataProvider(spaceshipData.SpaceshipEngineData), 
                 _actorController, _actorInput);
             _movementController.Initialize(movementControllerContext);
-            
-            var weaponControllerContext = new WeaponsControllerContext(_movementController, _actorInput, _weaponDataProvider);
+
+            var weaponControllerContext = new WeaponsControllerContext(
+                _movementController, _actorInput, 
+                new WeaponDataProvider(spaceshipData.WeaponData));
             _weaponsController.Initialize(weaponControllerContext);
+
+            var visualControllerContext = new SpaceshipVisualControllerContext(
+                _actorInput, 
+                new SpaceshipVisualDataProvider(spaceshipData.VisualData ));
+            _spaceshipVisualController.Initialize(visualControllerContext);
             
-            var visualControllerContext = new SpaceshipVisualControllerContext(_actorInput, _spaceshipVisualDataProvider);
-            spaceshipVisualController.Initialize(visualControllerContext);
         }
     }
 }

@@ -1,4 +1,5 @@
 using Starblast.Data;
+using Starblast.Data.Spaceships.Weapons;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -29,7 +30,7 @@ namespace Starblast.Actors.Weapons
 
         private Bullet CreateBullet()
         {
-            Bullet bulletPrefab = _weaponDataProvider.WeaponData.BulletPrefab;
+            Bullet bulletPrefab = _weaponDataProvider.Data.BulletPrefab;
             Bullet bullet = Instantiate(bulletPrefab, transform);
             bullet.Initialize(_bulletPool);
             return bullet;

@@ -1,4 +1,5 @@
 using Starblast.Data;
+using Starblast.Data.Spaceships.Weapons;
 using Starblast.Inputs;
 
 namespace Starblast.Actors.Weapons

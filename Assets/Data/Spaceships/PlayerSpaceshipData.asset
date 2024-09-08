@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c1bd2058fe54ba69a1f1e9ebdccf5aa, type: 3}
+  m_Name: PlayerSpaceshipData
+  m_EditorClassIdentifier: 
+  spaceshipBodyData: {fileID: 11400000, guid: 281c08834e86348af94798c072b5ddfc, type: 2}
+  spaceshipEngineData: {fileID: 11400000, guid: 599dbc187ae20498cb4c0381ade428fd, type: 2}
+  _weaponData: {fileID: 11400000, guid: efa5e0e205771412da5902afe4f7da85, type: 2}
+  _visualData: {fileID: 11400000, guid: e6e1f06b524f84282a3ca3c0a1000ebf, type: 2}

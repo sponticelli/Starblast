@@ -1,4 +1,6 @@
 using Starblast.Data;
+using Starblast.Data.Spaceships.Bodies;
+using Starblast.Data.Spaceships.Engines;
 using Starblast.Inputs;
 using UnityEngine;
 
@@ -15,8 +17,8 @@ namespace Starblast.Actors.Movements
         private float _thrustInput;
         private float _rotationInput;
         
-        private IBodyDataProvider _bodyDataProvider;
-        private IEngineDataProvider _engineDataProvider;
+        private ISpaceshipBodyDataProvider _spaceshipBodyDataProvider;
+        private ISpaceshipEngineDataProvider _spaceshipEngineDataProvider;
 
         // Cache for frequently used components
         private Rigidbody2D _cachedRigidbody;
@@ -24,8 +26,8 @@ namespace Starblast.Actors.Movements
 
         public void Initialize(IMovementControllerContext context)
         {
-            _bodyDataProvider = context.BodyDataProvider;
-            _engineDataProvider = context.EngineDataProvider;
+            _spaceshipBodyDataProvider = context.SpaceshipBodyDataProvider;
+            _spaceshipEngineDataProvider = context.SpaceshipEngineDataProvider;
             
             _rbProvider = context.Rigidbody2DProvider;
             _inputHandler = context.InputHandler;
@@ -78,23 +80,23 @@ namespace Starblast.Actors.Movements
                     break;
             }
 
-            _currentRotation = _rotationInput * _bodyDataProvider.BodyData.RotationSpeed;
+            _currentRotation = _rotationInput * _spaceshipBodyDataProvider.Data.RotationSpeed;
         }
 
         private void ApplyThrust(float input)
         {
-            var accelerationThisFrame = _engineDataProvider.EngineData.Acceleration * input;
+            var accelerationThisFrame = _spaceshipEngineDataProvider.Data.Acceleration * input;
             _velocity += (Vector2)_cachedTransform.up * (accelerationThisFrame * Time.fixedDeltaTime);
         }
 
         private void ApplyBrake(float input)
         {
-            _velocity -= _velocity.normalized * (_engineDataProvider.EngineData.BrakingForce * input * Time.fixedDeltaTime);
+            _velocity -= _velocity.normalized * (_spaceshipEngineDataProvider.Data.BrakingForce * input * Time.fixedDeltaTime);
         }
 
         private void ApplyDirectionalAutoBrake()
         {
-            if (!(Mathf.Abs(_thrustInput) < _bodyDataProvider.BodyData.AutoBrakeThreshold)) return;
+            if (!(Mathf.Abs(_thrustInput) < _spaceshipBodyDataProvider.Data.AutoBrakeThreshold)) return;
             
             Vector2 forwardDirection = _cachedTransform.up;
             var orthogonalDirection = Vector2.Perpendicular(forwardDirection);
@@ -104,8 +106,8 @@ namespace Starblast.Actors.Movements
             var orthogonalVelocity = Vector2.Dot(_velocity, orthogonalDirection) * orthogonalDirection;
 
             // Apply auto-brake to each component separately
-            forwardVelocity *= (1f - _bodyDataProvider.BodyData.ForwardAutoBrakeFactor * Time.fixedDeltaTime);
-            orthogonalVelocity *= (1f - _bodyDataProvider.BodyData.OrthogonalAutoBrakeFactor * Time.fixedDeltaTime);
+            forwardVelocity *= (1f - _spaceshipBodyDataProvider.Data.ForwardAutoBrakeFactor * Time.fixedDeltaTime);
+            orthogonalVelocity *= (1f - _spaceshipBodyDataProvider.Data.OrthogonalAutoBrakeFactor * Time.fixedDeltaTime);
 
             // Recombine the velocities
             _velocity = forwardVelocity + orthogonalVelocity;
@@ -113,13 +115,13 @@ namespace Starblast.Actors.Movements
 
         private void ApplyMovement()
         {
-            _velocity = Vector2.ClampMagnitude(_velocity, _engineDataProvider.EngineData.MaxSpeed);
+            _velocity = Vector2.ClampMagnitude(_velocity, _spaceshipEngineDataProvider.Data.MaxSpeed);
             _cachedRigidbody.MovePosition(_cachedRigidbody.position + _velocity * Time.fixedDeltaTime);
         }
 
         private void ApplyRotation()
         {
-            var engineData = _engineDataProvider.EngineData;
+            var engineData = _spaceshipEngineDataProvider.Data;
             var speedFactor = _velocity.magnitude / engineData.MaxSpeed;
             var maneuverability = engineData.SpeedToManeuverability.Evaluate(speedFactor);
             var rotationThisFrame = _currentRotation * maneuverability * Time.fixedDeltaTime;

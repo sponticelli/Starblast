@@ -1,4 +1,5 @@
 using Starblast.Data;
+using Starblast.Data.Spaceships.Visuals;
 using Starblast.Inputs;
 
 namespace Starblast.Actors.Visuals

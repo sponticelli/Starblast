@@ -26,17 +26,17 @@ namespace Starblast.Actors.Visuals
         public void Initialize(ISpaceshipVisualControllerContext context)
         {
             this._context = context;
-            bodyRenderer.sprite = context.VisualDataProvider.VisualData.BodySprite;
-            engineRenderer.sprite = context.VisualDataProvider.VisualData.EngineSprite;
+            bodyRenderer.sprite = context.VisualDataProvider.Data.BodySprite;
+            engineRenderer.sprite = context.VisualDataProvider.Data.EngineSprite;
             
             StopListeningInput();
             _actorInputHandler = context.ActorInputHandler;
             StartListeningInput();
             
             _cachedTransform = transform;
-            _cachedMaxAngle = context.VisualDataProvider.VisualData.MaxRotationAngle;
-            _cachedRotationSpeed = context.VisualDataProvider.VisualData.RotationSpeed;
-            _cachedReturnToZeroFactor = context.VisualDataProvider.VisualData.ReturnToZeroFactor;
+            _cachedMaxAngle = context.VisualDataProvider.Data.MaxRotationAngle;
+            _cachedRotationSpeed = context.VisualDataProvider.Data.RotationSpeed;
+            _cachedReturnToZeroFactor = context.VisualDataProvider.Data.ReturnToZeroFactor;
             _cachedReturnSpeed = _cachedRotationSpeed * _cachedReturnToZeroFactor; 
         }
         
