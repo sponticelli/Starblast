@@ -6,13 +6,13 @@ namespace Starblast.Actors.Weapons
 {
     public class BulletPoolManager : MonoBehaviour
     {
-        private IWeaponDataProvider _weaponDataProvider;
+        private IWeaponData _weaponData;
         private IObjectPool<Bullet> _bulletPool;
         
 
-        public void Initialize(IWeaponDataProvider weaponDataProvider)
+        public void Initialize(IWeaponData weaponData)
         {
-            _weaponDataProvider = weaponDataProvider;
+            _weaponData = weaponData;
 
             _bulletPool?.Clear();
 
@@ -29,7 +29,7 @@ namespace Starblast.Actors.Weapons
 
         private Bullet CreateBullet()
         {
-            Bullet bulletPrefab = _weaponDataProvider.Data.BulletPrefab;
+            Bullet bulletPrefab = _weaponData.BulletPrefab;
             Bullet bullet = Instantiate(bulletPrefab, transform);
             bullet.Initialize(_bulletPool);
             return bullet;

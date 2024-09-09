@@ -21,7 +21,7 @@ namespace Starblast.Actors.Weapons
         [SerializeField] private UnityEvent OnShootNoAmmo = null!;
         
         private IVelocityProvider _velocityProvider = null!;
-        private IWeaponDataProvider _weaponDataProvider = null!;
+        private IWeaponData _weaponData = null!;
 
         private int _ammo;
         private bool _isShooting;
@@ -30,22 +30,22 @@ namespace Starblast.Actors.Weapons
         public int Ammo
         {
             get => _ammo;
-            set => _ammo = Mathf.Clamp(value, 0, _weaponDataProvider?.Data.AmmoCapacity ?? 0);
+            set => _ammo = Mathf.Clamp(value, 0, _weaponData?.AmmoCapacity ?? 0);
         }
 
         public bool AmmoEmpty => Ammo <= 0;
-        public bool AmmoFull => Ammo >= _weaponDataProvider?.Data.AmmoCapacity;
+        public bool AmmoFull => Ammo >= _weaponData?.AmmoCapacity;
 
         private void Start()
         {
-            if (_weaponDataProvider == null || _velocityProvider == null)
+            if (_weaponData == null || _velocityProvider == null)
             {
                 Debug.LogError("Weapon not properly initialized. Please call Initialize before use.");
                 enabled = false;
                 return;
             }
 
-            Ammo = _weaponDataProvider.Data.AmmoCapacity;
+            Ammo = _weaponData.AmmoCapacity;
         }
 
         private void Update() => UseWeapon();
@@ -53,9 +53,9 @@ namespace Starblast.Actors.Weapons
         /// <summary>
         /// Initializes the weapon with necessary dependencies.
         /// </summary>
-        public void Initialize(IWeaponDataProvider weaponDataProvider, IVelocityProvider velocityProvider)
+        public void Initialize(IWeaponData weaponData, IVelocityProvider velocityProvider)
         {
-            _weaponDataProvider = weaponDataProvider ?? throw new ArgumentNullException(nameof(weaponDataProvider));
+            _weaponData = weaponData ?? throw new ArgumentNullException(nameof(weaponData));
             _velocityProvider = velocityProvider ?? throw new ArgumentNullException(nameof(velocityProvider));
             
             if (_bulletPoolManager == null)
@@ -65,7 +65,7 @@ namespace Starblast.Actors.Weapons
                 return;
             }
             
-            _bulletPoolManager.Initialize(_weaponDataProvider);
+            _bulletPoolManager.Initialize(_weaponData);
 
             if (_muzzle == null)
             {
@@ -74,7 +74,7 @@ namespace Starblast.Actors.Weapons
                 return;
             }
 
-            _muzzle.localPosition = _weaponDataProvider.Data.MuzzleOffset;
+            _muzzle.localPosition = _weaponData.MuzzleOffset;
         }
         
 
@@ -91,7 +91,7 @@ namespace Starblast.Actors.Weapons
             Ammo--;
             OnShoot?.Invoke();
 
-            for (int i = 0; i < _weaponDataProvider.Data.GetBulletCountToSpawn; i++)
+            for (int i = 0; i < _weaponData.GetBulletCountToSpawn; i++)
             {
                 ShootBullet();
             }
@@ -112,14 +112,15 @@ namespace Starblast.Actors.Weapons
             var bullet = _bulletPoolManager.GetBullet();
             bullet.transform.SetPositionAndRotation(_muzzle.position, _muzzle.rotation);
 
-            var direction = Quaternion.Euler(0, 0, Random.Range(-_weaponDataProvider.Data.SpreadAngle, _weaponDataProvider.Data.SpreadAngle)) * _muzzle.up;
+            var direction = Quaternion.Euler(0, 0, 
+                Random.Range(-_weaponData.SpreadAngle, _weaponData.SpreadAngle)) * _muzzle.up;
             bullet.Shoot(direction, _velocityProvider.GetVelocity());
         }
 
         private void FinishShooting()
         {
             StartCoroutine(DelayNextShootCoroutine());
-            if (!_weaponDataProvider.Data.AutomaticFire)
+            if (!_weaponData.AutomaticFire)
             {
                 _isShooting = false;
             }
@@ -128,7 +129,7 @@ namespace Starblast.Actors.Weapons
         private IEnumerator DelayNextShootCoroutine()
         {
             _isReloading = true;
-            yield return new WaitForSeconds(_weaponDataProvider.Data.WeaponDelay);
+            yield return new WaitForSeconds(_weaponData.WeaponDelay);
             _isReloading = false;
         }
 

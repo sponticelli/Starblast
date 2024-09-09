@@ -14,7 +14,7 @@ namespace Starblast.Actors.Weapons
         public void Initialize(IWeaponsControllerContext context)
         {
             _context = context;
-            _weapon.Initialize(context.WeaponDataProvider, context.VelocityProvider);
+            _weapon.Initialize(context.WeaponData, context.VelocityProvider);
             StopListeningInput();
             _inputHandler = context.ActorInputHandler;
             StartListeningInput();

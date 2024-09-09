@@ -8,6 +8,6 @@ namespace Starblast.Actors.Weapons
         public IVelocityProvider VelocityProvider { get; }
         public IActorInputHandler ActorInputHandler { get; }
         
-        public IWeaponDataProvider WeaponDataProvider { get; }
+        public IWeaponData WeaponData { get; }
     }
 }

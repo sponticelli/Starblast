@@ -7,6 +7,6 @@ namespace Starblast.Actors.Visuals
     {
         public IActorInputHandler ActorInputHandler { get; }
         
-        public ISpaceshipVisualDataProvider VisualDataProvider { get; }
+        public ISpaceshipVisualData VisualData { get; }
     }
 }

@@ -1,25 +1,26 @@
 using Starblast.Data.Spaceships.Bodies;
 using Starblast.Data.Spaceships.Engines;
 using Starblast.Inputs;
+using UnityEngine;
 
 namespace Starblast.Actors.Movements
 {
     public class SpaceshipMovementControllerContext : ISpaceshipMovementControllerContext
     {
-        public ISpaceshipBodyDataProvider SpaceshipBodyDataProvider { get; private set; }
-        public ISpaceshipEngineDataProvider SpaceshipEngineDataProvider { get; private set; }
+        public ISpaceshipBodyData SpaceshipBodyData { get; private set; }
+        public ISpaceshipEngineData SpaceshipEngineData { get; private set; }
         
-        public IRigidbody2DProvider Rigidbody2DProvider { get; private set; }
+        public Rigidbody2D Rigidbody2D { get; private set; }
         public IActorInputHandler InputHandler { get; private set; }
         
-        public SpaceshipMovementControllerContext(ISpaceshipBodyDataProvider spaceshipBodyDataProvider,
-            ISpaceshipEngineDataProvider spaceshipEngineDataProvider,
-            IRigidbody2DProvider rigidbody2DProvider,
+        public SpaceshipMovementControllerContext(ISpaceshipBodyData spaceshipBodyData,
+            ISpaceshipEngineData spaceshipEngineData,
+            Rigidbody2D rigidbody2D,
             IActorInputHandler inputHandler)
         {
-            SpaceshipBodyDataProvider = spaceshipBodyDataProvider;
-            SpaceshipEngineDataProvider = spaceshipEngineDataProvider;
-            Rigidbody2DProvider = rigidbody2DProvider;
+            SpaceshipBodyData = spaceshipBodyData;
+            SpaceshipEngineData = spaceshipEngineData;
+            Rigidbody2D = rigidbody2D;
             InputHandler = inputHandler;
         }
     }

@@ -4,16 +4,17 @@ using System.IO;
 
 namespace Starblast.Data
 {
-    public class StubClassGenerator : EditorWindow
+    public class DataClassGenerator : EditorWindow
     {
         private string entityName = "";
         private string typeName = "";
         private string targetFolder = "Assets";
+        private bool useType = false;
 
         [MenuItem("Starblast/Tools/Data Class Generator")]
         public static void ShowWindow()
         {
-            GetWindow<StubClassGenerator>("Data Class Generator");
+            GetWindow<DataClassGenerator>("Data Class Generator");
         }
 
         private void OnGUI()
@@ -21,7 +22,12 @@ namespace Starblast.Data
             GUILayout.Label("Data Class Generator", EditorStyles.boldLabel);
 
             entityName = EditorGUILayout.TextField("Entity Name", entityName);
-            typeName = EditorGUILayout.TextField("Type", typeName);
+            
+            useType = EditorGUILayout.Toggle("Use Type", useType);
+            if (useType)
+            {
+                typeName = EditorGUILayout.TextField("Type", typeName);
+            }
 
             if (GUILayout.Button("Select Target Folder"))
             {
@@ -40,25 +46,22 @@ namespace Starblast.Data
 
         private void GenerateStubClasses()
         {
-            if (string.IsNullOrEmpty(entityName) || string.IsNullOrEmpty(typeName))
+            if (string.IsNullOrEmpty(entityName) || (useType && string.IsNullOrEmpty(typeName)))
             {
-                EditorUtility.DisplayDialog("Error", "Entity Name and Type are required.", "OK");
+                EditorUtility.DisplayDialog("Error", "Entity Name is required. If using Type, Type is also required.", "OK");
                 return;
             }
 
             string entityNames = PluralizeNoun(entityName);
-            string types = PluralizeNoun(typeName);
+            string types = useType ? PluralizeNoun(typeName) : "";
 
-            GenerateFile($"I{entityName}{typeName}Data.cs",
-                GetIEntityTypeDataContent(entityName, typeName, entityNames, types));
-            GenerateFile($"I{entityName}{typeName}DataProvider.cs",
-                GetIEntityTypeDataProviderContent(entityName, typeName, entityNames, types));
-            GenerateFile($"{entityName}{typeName}Data.cs",
-                GetEntityTypeDataContent(entityName, typeName, entityNames, types));
-            GenerateFile($"{entityName}{typeName}DataProvider.cs",
-                GetEntityTypeDataProviderContent(entityName, typeName, entityNames, types));
-            GenerateFile($"{entityName}{typeName}DataProviderMB.cs",
-                GetEntityTypeDataProviderMBContent(entityName, typeName, entityNames, types));
+            string prefix = useType ? $"{entityName}{typeName}" : entityName;
+            string namespaceSuffix = useType ? $".{types}" : "";
+
+            GenerateFile($"I{prefix}Data.cs",
+                GetIEntityTypeDataContent(entityName, typeName, entityNames, types, useType));
+            GenerateFile($"{prefix}DataSO.cs",
+                GetEntityTypeDataContent(entityName, typeName, entityNames, types, useType));
 
             AssetDatabase.Refresh();
             EditorUtility.DisplayDialog("Success", "Stub classes generated successfully.", "OK");
@@ -70,79 +73,41 @@ namespace Starblast.Data
             File.WriteAllText(filePath, content);
         }
 
-        private string GetIEntityTypeDataContent(string entityName, string typeName, string entityNames, string types)
+        private string GetIEntityTypeDataContent(string entityName, string typeName, string entityNames, string types, bool useType)
         {
+            string namespaceSuffix = useType ? $".{types}" : "";
+            string interfaceName = useType ? $"I{entityName}{typeName}Data" : $"I{entityName}Data";
+
             return $@"using UnityEngine;
 
-namespace Starblast.Data.{entityNames}.{types}
+namespace Starblast.Data.{entityNames}{namespaceSuffix}
 {{
-    public interface I{entityName}{typeName}Data : IData
+    public interface {interfaceName} : IData
     {{
         // Add your data here
     }}
 }}";
         }
 
-        private string GetIEntityTypeDataProviderContent(string entityName, string typeName, string entityNames,
-            string types)
+        private string GetEntityTypeDataContent(string entityName, string typeName, string entityNames, string types, bool useType)
         {
-            return $@"namespace Starblast.Data.{entityNames}.{types}
-{{
-    public interface I{entityName}{typeName}DataProvider : IDataProvider<I{entityName}{typeName}Data>
-    {{
-        
-    }}
-}}";
-        }
+            string namespaceSuffix = useType ? $".{types}" : "";
+            string className = useType ? $"{entityName}{typeName}DataSO" : $"{entityName}DataSO";
+            string interfaceName = useType ? $"I{entityName}{typeName}Data" : $"I{entityName}Data";
+            string menuName = useType ? $"Starblast/{entityName}/Data/{typeName} Data" : $"Starblast/{entityName}/Data";
 
-        private string GetEntityTypeDataContent(string entityName, string typeName, string entityNames, string types)
-        {
             return $@"using UnityEngine;
 
-namespace Starblast.Data.{entityNames}.{types}
+namespace Starblast.Data.{entityNames}{namespaceSuffix}
 {{
-    [CreateAssetMenu(fileName = ""New{entityName}{typeName}Data"", menuName = ""Starblast/{entityName}/Data/{typeName} Data"")]
-    public class {entityName}{typeName}DataSO : ScriptableObject, I{entityName}{typeName}Data
+    [CreateAssetMenu(fileName = ""New{className}"", menuName = ""{menuName}"")]
+    public class {className} : ScriptableObject, {interfaceName}
     {{
         // Add your data here
     }}
 }}";
         }
-
-        private string GetEntityTypeDataProviderContent(string entityName, string typeName, string entityNames,
-            string types)
-        {
-            return $@"namespace Starblast.Data.{entityNames}.{types}
-{{
-    public class {entityName}{typeName}DataProvider : I{entityName}{typeName}DataProvider
-    {{
-        public {entityName}{typeName}DataProvider(I{entityName}{typeName}Data data)
-        {{
-            Data = data;
-        }}
-
-        public I{entityName}{typeName}Data Data {{ get; }}
-    }}
-}}";
-        }
-
-        private string GetEntityTypeDataProviderMBContent(string entityName, string typeName, string entityNames,
-            string types)
-        {
-            return $@"using UnityEngine;
-
-namespace Starblast.Data.{entityNames}.{types}
-{{
-    [AddComponentMenu(""Starblast/{entityName}/Data/{typeName} Data Provider"")]
-    public class {entityName}{typeName}DataProviderMB : MonoBehaviour, I{entityName}{typeName}DataProvider
-    {{
-        [field: SerializeField] private {entityName}{typeName}DataSO _data;
         
-        public I{entityName}{typeName}Data Data => _data;
-    }}
-}}";
-        }
-
         private string PluralizeNoun(string noun)
         {
             // This is a very simple pluralization method.

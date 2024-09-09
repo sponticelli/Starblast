@@ -7795,7 +7795,6 @@ GameObject:
   - component: {fileID: 557112445}
   - component: {fileID: 557112444}
   - component: {fileID: 557112443}
-  - component: {fileID: 557112447}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -7817,10 +7816,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _actorController: {fileID: 557112445}
   _actorInput: {fileID: 1715169964}
-  _movementController: {fileID: 2084801529}
+  spaceshipMovementController: {fileID: 2084801529}
   _weaponsController: {fileID: 38836836}
   _spaceshipVisualController: {fileID: 698427046}
-  _spaceshipDataProvider: {fileID: 557112447}
+  _spaceshipData: {fileID: 11400000, guid: cec5498b3ed544cb79e2965047deba1c, type: 2}
 --- !u!50 &557112444
 Rigidbody2D:
   serializedVersion: 4
@@ -7880,19 +7879,6 @@ Transform:
   - {fileID: 38836835}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &557112447
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 557112442}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c1ed0654151402db884e0805d42c27d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _spaceshipData: {fileID: 11400000, guid: cec5498b3ed544cb79e2965047deba1c, type: 2}
 --- !u!1 &557588056
 GameObject:
   m_ObjectHideFlags: 0

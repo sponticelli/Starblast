@@ -23,7 +23,7 @@ namespace Starblast.Actors
         [SerializeField] private SpaceshipVisualController _spaceshipVisualController;
         
         [Header("Data")]
-        [SerializeField] private MBSpaceshipDataProvider _spaceshipDataProvider;
+        [SerializeField] private SpaceshipDataSO _spaceshipData;
         
         private void Awake()
         {
@@ -32,22 +32,21 @@ namespace Starblast.Actors
 
         private void Initialize()
         {
-            var spaceshipData = _spaceshipDataProvider.Data;
             
             var movementControllerContext = new SpaceshipMovementControllerContext(
-                new SpaceshipBodyDataProvider(spaceshipData.SpaceshipBodyData), 
-                new SpaceshipEngineDataProvider(spaceshipData.SpaceshipEngineData), 
-                _actorController, _actorInput);
+                _spaceshipData.SpaceshipBodyData, 
+                _spaceshipData.SpaceshipEngineData, 
+                _actorController.GetRigidbody2D(), _actorInput);
             spaceshipMovementController.Initialize(movementControllerContext);
 
             var weaponControllerContext = new WeaponsControllerContext(
                 spaceshipMovementController, _actorInput, 
-                new WeaponDataProvider(spaceshipData.WeaponData));
+                _spaceshipData.WeaponData);
             _weaponsController.Initialize(weaponControllerContext);
 
             var visualControllerContext = new SpaceshipVisualControllerContext(
                 _actorInput, 
-                new SpaceshipVisualDataProvider(spaceshipData.VisualData ));
+                _spaceshipData.VisualData);
             _spaceshipVisualController.Initialize(visualControllerContext);
             
         }
