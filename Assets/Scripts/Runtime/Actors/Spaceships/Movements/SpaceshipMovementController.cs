@@ -1,3 +1,4 @@
+using Starblast.Actors.Spaceships.Movements;
 using Starblast.Data.Spaceships.Bodies;
 using Starblast.Data.Spaceships.Engines;
 using Starblast.Inputs;
@@ -22,9 +23,13 @@ namespace Starblast.Actors.Movements
         // Cache for frequently used components
         private Rigidbody2D _cachedRigidbody;
         private Transform _cachedTransform;
+        
+        private IMovementCalculator _spaceshipMovementCalculator;
 
         public void Initialize(ISpaceshipMovementControllerContext context)
         {
+            _spaceshipMovementCalculator = new SpaceshipMovementCalculator(context.SpaceshipBodyData, context.SpaceshipEngineData);
+            
             _spaceshipBodyData = context.SpaceshipBodyData;
             _spaceshipEngineData = context.SpaceshipEngineData;
             
@@ -63,7 +68,6 @@ namespace Starblast.Actors.Movements
         {
             ApplyMovement();
             ApplyRotation();
-            ApplyDirectionalAutoBrake();
         }
         
         private void HandleInput()
@@ -92,37 +96,16 @@ namespace Starblast.Actors.Movements
             _velocity -= _velocity.normalized * (_spaceshipEngineData.BrakingForce * input * Time.fixedDeltaTime);
         }
 
-        private void ApplyDirectionalAutoBrake()
-        {
-            if (!(Mathf.Abs(_thrustInput) < _spaceshipBodyData.AutoBrakeThreshold)) return;
-            
-            Vector2 forwardDirection = _cachedTransform.up;
-            var orthogonalDirection = Vector2.Perpendicular(forwardDirection);
-
-            // Decompose velocity into forward and orthogonal components
-            var forwardVelocity = Vector2.Dot(_velocity, forwardDirection) * forwardDirection;
-            var orthogonalVelocity = Vector2.Dot(_velocity, orthogonalDirection) * orthogonalDirection;
-
-            // Apply auto-brake to each component separately
-            forwardVelocity *= (1f - _spaceshipBodyData.ForwardAutoBrakeFactor * Time.fixedDeltaTime);
-            orthogonalVelocity *= (1f - _spaceshipBodyData.OrthogonalAutoBrakeFactor * Time.fixedDeltaTime);
-
-            // Recombine the velocities
-            _velocity = forwardVelocity + orthogonalVelocity;
-        }
-
         private void ApplyMovement()
         {
-            _velocity = Vector2.ClampMagnitude(_velocity, _spaceshipEngineData.MaxSpeed);
+            _velocity = _spaceshipMovementCalculator.CalculateVelocity(_velocity, _thrustInput, _cachedTransform.up, Time.fixedDeltaTime);
             _cachedRigidbody.MovePosition(_cachedRigidbody.position + _velocity * Time.fixedDeltaTime);
         }
 
         private void ApplyRotation()
         {
-            var speedFactor = _velocity.magnitude / _spaceshipEngineData.MaxSpeed;
-            var maneuverability = _spaceshipEngineData.SpeedToManeuverability.Evaluate(speedFactor);
-            var rotationThisFrame = _currentRotation * maneuverability * Time.fixedDeltaTime;
-            _cachedRigidbody.MoveRotation(_cachedRigidbody.rotation - rotationThisFrame);
+            float rotationThisFrame = _spaceshipMovementCalculator.CalculateRotation(_rotationInput, _velocity.magnitude, Time.fixedDeltaTime);
+            _cachedRigidbody.MoveRotation(_cachedRigidbody.rotation + rotationThisFrame);
         }
         
         #region Input Handling
