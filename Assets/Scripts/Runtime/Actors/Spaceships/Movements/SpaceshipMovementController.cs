@@ -1,4 +1,3 @@
-using Starblast.Actors.Spaceships.Movements;
 using Starblast.Data;
 using Starblast.Inputs;
 using TMPro.EditorUtilities;
@@ -23,14 +22,16 @@ namespace Starblast.Actors.Movements
         private Rigidbody2D _cachedRigidbody;
         private Transform _cachedTransform;
         
-        private IMovementCalculator _spaceshipMovementCalculator;
+        private IMovementCalculator _movementCalculator;
         private IPhysicsApplier _physicsApplier;
 
-        public void Initialize(ISpaceshipMovementControllerContext context)
+        public void Initialize(ISpaceshipMovementControllerContext context,
+            IPhysicsApplier physicsApplier,
+            IMovementCalculator movementCalculator)
         {
-            _physicsApplier = new KinematicPhysicsApplier(context.Rigidbody2D);
+            _physicsApplier = physicsApplier;
             
-            _spaceshipMovementCalculator = new SpaceshipMovementCalculator(context.BodyData, context.PropulsorData);
+            _movementCalculator = movementCalculator;
             
             _bodyData = context.BodyData;
             _propulsorData = context.PropulsorData;
@@ -100,13 +101,13 @@ namespace Starblast.Actors.Movements
 
         private void ApplyMovement()
         {
-            _velocity = _spaceshipMovementCalculator.CalculateVelocity(_velocity, _thrustInput, _cachedTransform.up, Time.fixedDeltaTime);
+            _velocity = _movementCalculator.CalculateVelocity(_velocity, _thrustInput, _cachedTransform.up, Time.fixedDeltaTime);
             _physicsApplier.ApplyMovement(_velocity, Time.fixedDeltaTime);
         }
 
         private void ApplyRotation()
         {
-            float rotationThisFrame = _spaceshipMovementCalculator.CalculateRotation(_rotationInput, _velocity.magnitude, Time.fixedDeltaTime);
+            float rotationThisFrame = _movementCalculator.CalculateRotation(_rotationInput, _velocity.magnitude, Time.fixedDeltaTime);
             //_cachedRigidbody.MoveRotation(_cachedRigidbody.rotation + rotationThisFrame);
             _physicsApplier.ApplyRotation(rotationThisFrame);
         }

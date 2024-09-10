@@ -1,15 +1,14 @@
-using Starblast.Actors.Movements;
 using Starblast.Data;
 using UnityEngine;
 
-namespace Starblast.Actors.Spaceships.Movements
+namespace Starblast.Actors.Movements
 {
-    public class SpaceshipMovementCalculator : IMovementCalculator
+    public class KinematicMovementCalculator : IMovementCalculator
     {
         private readonly IBodyData _bodyData;
         private readonly IPropulsorData _engineData;
 
-        public SpaceshipMovementCalculator(IBodyData bodyData, IPropulsorData engineData)
+        public KinematicMovementCalculator(IBodyData bodyData, IPropulsorData engineData)
         {
             _bodyData = bodyData;
             _engineData = engineData;

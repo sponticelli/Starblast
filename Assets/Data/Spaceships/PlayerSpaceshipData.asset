@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c1bd2058fe54ba69a1f1e9ebdccf5aa, type: 3}
   m_Name: PlayerSpaceshipData
   m_EditorClassIdentifier: 
-  spaceshipBodyData: {fileID: 11400000, guid: 281c08834e86348af94798c072b5ddfc, type: 2}
-  spaceshipEngineData: {fileID: 11400000, guid: 599dbc187ae20498cb4c0381ade428fd, type: 2}
+  movementComponentFactory: {fileID: 11400000, guid: 190ce0f6945e34290be929a4c2535f0b, type: 2}
+  bodyData: {fileID: 11400000, guid: 281c08834e86348af94798c072b5ddfc, type: 2}
+  propulsorData: {fileID: 11400000, guid: 599dbc187ae20498cb4c0381ade428fd, type: 2}
   _weaponData: {fileID: 11400000, guid: efa5e0e205771412da5902afe4f7da85, type: 2}
   _visualData: {fileID: 11400000, guid: e6e1f06b524f84282a3ca3c0a1000ebf, type: 2}

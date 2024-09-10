@@ -16,11 +16,12 @@ namespace Starblast.Actors
         [Header("Component References")]
         [SerializeField] private ActorController _actorController;
         [SerializeField] private PlayerInputHandler _actorInput;
-        [FormerlySerializedAs("_movementController")] [SerializeField] private SpaceshipMovementController spaceshipMovementController;
+        [SerializeField] private SpaceshipMovementController spaceshipMovementController;
         [SerializeField] private WeaponsController _weaponsController;
         [SerializeField] private SpaceshipVisualController _spaceshipVisualController;
         
         [Header("Data")]
+        [SerializeField] private AMovementComponentFactory _movementComponentFactory;
         [SerializeField] private SpaceshipDataSO _spaceshipData;
         
         private void Awake()
@@ -30,12 +31,14 @@ namespace Starblast.Actors
 
         private void Initialize()
         {
-            
             var movementControllerContext = new SpaceshipMovementControllerContext(
                 _spaceshipData.BodyData, 
                 _spaceshipData.PropulsorData, 
                 _actorController.GetRigidbody2D(), _actorInput);
-            spaceshipMovementController.Initialize(movementControllerContext);
+            spaceshipMovementController.Initialize(movementControllerContext, 
+                _movementComponentFactory.CreatePhysicsApplier(_actorController.GetRigidbody2D()), 
+                _movementComponentFactory.CreateMovementCalculator(_spaceshipData.BodyData, _spaceshipData.PropulsorData)
+                );
 
             var weaponControllerContext = new WeaponsControllerContext(
                 spaceshipMovementController, _actorInput, 
