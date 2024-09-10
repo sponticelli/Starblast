@@ -1,8 +1,8 @@
 using UnityEngine;
 
-namespace Starblast.Data.Spaceships.Engines
+namespace Starblast.Data
 {
-    public interface ISpaceshipEngineData : IData
+    public interface IPropulsorData : IData
     {
         float MaxSpeed { get; }
         float Acceleration { get; }

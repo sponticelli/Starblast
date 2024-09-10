@@ -1,9 +1,9 @@
 using UnityEngine;
 
-namespace Starblast.Data.Spaceships.Bodies
+namespace Starblast.Data
 {
-    [CreateAssetMenu(fileName = "SpaceshipBodyData", menuName = "Starblast/Spaceship/Data/Body Data")]
-    public class SpaceshipBodyDataSO : ScriptableObject, ISpaceshipBodyData
+    [CreateAssetMenu(fileName = "BodyData", menuName = "Starblast/Data/Body Data")]
+    public class BodyDataSO : ScriptableObject, IBodyData
     {
         [SerializeField] private float _rotationSpeed = 180f;
         

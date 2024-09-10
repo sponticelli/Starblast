@@ -1,6 +1,5 @@
 using Starblast.Actors.Spaceships.Movements;
-using Starblast.Data.Spaceships.Bodies;
-using Starblast.Data.Spaceships.Engines;
+using Starblast.Data;
 using Starblast.Inputs;
 using TMPro.EditorUtilities;
 using UnityEngine;
@@ -17,8 +16,8 @@ namespace Starblast.Actors.Movements
         private float _thrustInput;
         private float _rotationInput;
         
-        private ISpaceshipBodyData _spaceshipBodyData;
-        private ISpaceshipEngineData _spaceshipEngineData;
+        private IBodyData _bodyData;
+        private IPropulsorData _propulsorData;
 
         // Cache for frequently used components
         private Rigidbody2D _cachedRigidbody;
@@ -31,10 +30,10 @@ namespace Starblast.Actors.Movements
         {
             _physicsApplier = new KinematicPhysicsApplier(context.Rigidbody2D);
             
-            _spaceshipMovementCalculator = new SpaceshipMovementCalculator(context.SpaceshipBodyData, context.SpaceshipEngineData);
+            _spaceshipMovementCalculator = new SpaceshipMovementCalculator(context.BodyData, context.PropulsorData);
             
-            _spaceshipBodyData = context.SpaceshipBodyData;
-            _spaceshipEngineData = context.SpaceshipEngineData;
+            _bodyData = context.BodyData;
+            _propulsorData = context.PropulsorData;
             
             _inputHandler = context.InputHandler;
             
@@ -85,18 +84,18 @@ namespace Starblast.Actors.Movements
                     break;
             }
 
-            _currentRotation = _rotationInput * _spaceshipBodyData.RotationSpeed;
+            _currentRotation = _rotationInput * _bodyData.RotationSpeed;
         }
 
         private void ApplyThrust(float input)
         {
-            var accelerationThisFrame = _spaceshipEngineData.Acceleration * input;
+            var accelerationThisFrame = _propulsorData.Acceleration * input;
             _velocity += (Vector2)_cachedTransform.up * (accelerationThisFrame * Time.fixedDeltaTime);
         }
 
         private void ApplyBrake(float input)
         {
-            _velocity -= _velocity.normalized * (_spaceshipEngineData.BrakingForce * input * Time.fixedDeltaTime);
+            _velocity -= _velocity.normalized * (_propulsorData.BrakingForce * input * Time.fixedDeltaTime);
         }
 
         private void ApplyMovement()

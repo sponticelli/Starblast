@@ -1,6 +1,6 @@
-namespace Starblast.Data.Spaceships.Bodies
+namespace Starblast.Data
 {
-    public interface ISpaceshipBodyData : IData
+    public interface IBodyData : IData
     {
         float RotationSpeed { get; }
         float ForwardAutoBrakeFactor { get; }

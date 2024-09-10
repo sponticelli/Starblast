@@ -1,9 +1,9 @@
 using UnityEngine;
 
-namespace Starblast.Data.Spaceships.Engines
+namespace Starblast.Data
 {
-    [CreateAssetMenu(fileName = "NewSpaceshipEngineData", menuName = "Starblast/Spaceship/Data/Engine Data")]
-    public class SpaceshipEngineDataSO : ScriptableObject, ISpaceshipEngineData
+    [CreateAssetMenu(fileName = "PropulsorData", menuName = "Starblast/Data/Propulsor Data")]
+    public class PropulsorDataSO : ScriptableObject, IPropulsorData
     {
         [SerializeField] private float _maxSpeed = 20f;
         [SerializeField] private float _acceleration = 4f;

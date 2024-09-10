@@ -2,8 +2,6 @@ using Starblast.Actors.Movements;
 using Starblast.Actors.Visuals;
 using Starblast.Actors.Weapons;
 using Starblast.Data.Spaceships;
-using Starblast.Data.Spaceships.Bodies;
-using Starblast.Data.Spaceships.Engines;
 using Starblast.Data.Spaceships.Visuals;
 using Starblast.Data.Spaceships.Weapons;
 using Starblast.Inputs;
@@ -34,8 +32,8 @@ namespace Starblast.Actors
         {
             
             var movementControllerContext = new SpaceshipMovementControllerContext(
-                _spaceshipData.SpaceshipBodyData, 
-                _spaceshipData.SpaceshipEngineData, 
+                _spaceshipData.BodyData, 
+                _spaceshipData.PropulsorData, 
                 _actorController.GetRigidbody2D(), _actorInput);
             spaceshipMovementController.Initialize(movementControllerContext);
 
