@@ -25,9 +25,12 @@ namespace Starblast.Actors.Movements
         private Transform _cachedTransform;
         
         private IMovementCalculator _spaceshipMovementCalculator;
+        private IPhysicsApplier _physicsApplier;
 
         public void Initialize(ISpaceshipMovementControllerContext context)
         {
+            _physicsApplier = new KinematicPhysicsApplier(context.Rigidbody2D);
+            
             _spaceshipMovementCalculator = new SpaceshipMovementCalculator(context.SpaceshipBodyData, context.SpaceshipEngineData);
             
             _spaceshipBodyData = context.SpaceshipBodyData;
@@ -99,13 +102,14 @@ namespace Starblast.Actors.Movements
         private void ApplyMovement()
         {
             _velocity = _spaceshipMovementCalculator.CalculateVelocity(_velocity, _thrustInput, _cachedTransform.up, Time.fixedDeltaTime);
-            _cachedRigidbody.MovePosition(_cachedRigidbody.position + _velocity * Time.fixedDeltaTime);
+            _physicsApplier.ApplyMovement(_velocity, Time.fixedDeltaTime);
         }
 
         private void ApplyRotation()
         {
             float rotationThisFrame = _spaceshipMovementCalculator.CalculateRotation(_rotationInput, _velocity.magnitude, Time.fixedDeltaTime);
-            _cachedRigidbody.MoveRotation(_cachedRigidbody.rotation + rotationThisFrame);
+            //_cachedRigidbody.MoveRotation(_cachedRigidbody.rotation + rotationThisFrame);
+            _physicsApplier.ApplyRotation(rotationThisFrame);
         }
         
         #region Input Handling
@@ -134,4 +138,6 @@ namespace Starblast.Actors.Movements
         }
         #endregion
     }
+
+ 
 }
