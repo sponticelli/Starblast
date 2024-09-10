@@ -9,12 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 202e228c140f4e71a1bfa0847bea6b62, type: 3}
-  m_Name: SpaceshipBodyData
+  m_Script: {fileID: 11500000, guid: 391484f968a34232ba537809b9ae35d0, type: 3}
+  m_Name: DynamicMovementComponentFactory
   m_EditorClassIdentifier: 
-  _rotationSpeed: 180
-  _forwardAutoBrakeFactor: 0.15
-  _orthogonalAutoBrakeFactor: 20
-  _autoBrakeThreshold: 1.1
-  _mass: 10
-  _momentOfInertia: 5

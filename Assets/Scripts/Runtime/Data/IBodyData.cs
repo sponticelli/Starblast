@@ -6,5 +6,8 @@ namespace Starblast.Data
         float ForwardAutoBrakeFactor { get; }
         float OrthogonalAutoBrakeFactor { get; }
         float AutoBrakeThreshold { get; }
+        
+        float Mass { get; }
+        float MomentOfInertia { get; }
     }
 }
