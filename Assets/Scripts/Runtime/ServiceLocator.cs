@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Starblast.Audio;
 using Starblast.Pools;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -20,10 +21,10 @@ namespace Starblast
         
         // Services Shortcuts
         public IPoolManager PoolManager { get; private set; }
+        public IMusicManager MusicManager { get; private set; }
         
         /*
         public IMusicManager AudioManager { get; private set; }
-        public ISoundManager SoundManager { get; private set; }
         public IFadeToBlack FadeToBlack { get; private set; }
         public ISceneLoader SceneLoader { get; private set; }
         public ICommandFactory CommandFactory { get; private set; }
@@ -62,7 +63,9 @@ namespace Starblast
         private void LoadServices()
         {
             PoolManager = GetComponentInChildren<IPoolManager>();
+            MusicManager = GetComponentInChildren<IMusicManager>();
             Register<IPoolManager>(PoolManager);
+            Register<IMusicManager>(MusicManager);
             
             /*
             AudioManager = GetComponentInChildren<IMusicManager>();
@@ -77,6 +80,7 @@ namespace Starblast
         private void InitializeServices()
         {
             PoolManager.Initialize();
+            MusicManager.Initialize();
             /*
             AudioManager.Initialize();
             SoundManager.Initialize();

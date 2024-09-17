@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Starblast.Weapons
 {
-    [CreateAssetMenu(fileName = "NewWeaponData", menuName = "Starblast/Weapons/Weapon Data")]
+    [CreateAssetMenu(fileName = "NewWeaponData", menuName = "Starblast/Data/Weapons/Weapon Data")]
     public class WeaponDataSO : ScriptableObject
     {
         [field: SerializeField]
