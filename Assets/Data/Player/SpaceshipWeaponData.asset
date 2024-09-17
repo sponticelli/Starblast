@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebdb0abf09634967aa4778cf5608576c, type: 3}
   m_Name: SpaceshipWeaponData
   m_EditorClassIdentifier: 
-  <MuzzleOffset>k__BackingField: {x: 0, y: 0}
+  <MuzzleOffset>k__BackingField: {x: 0, y: 0.528}
   <AmmoCapacity>k__BackingField: 100
   <AutomaticFire>k__BackingField: 1
   <WeaponDelay>k__BackingField: 0.1
   <SpreadAngle>k__BackingField: 3
   _multiBulletShoot: 0
   _bulletCountToSpawn: 1
-  <BulletPrefab>k__BackingField: {fileID: 3926977136805972190, guid: 9302005b3696b428085e08e4b6201ad0, type: 3}
+  <BulletPrefab>k__BackingField: {fileID: 861819349535649226, guid: 9302005b3696b428085e08e4b6201ad0, type: 3}

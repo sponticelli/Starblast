@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Starblast.Pools;
 using UnityEngine;
 using UnityEngine.Events;
 using Random = UnityEngine.Random;
@@ -13,7 +14,6 @@ namespace Starblast.Weapons
     {
         [Header("References")]
         [SerializeField] private Transform _muzzle = null!;
-        [SerializeField] private BulletPoolManager _bulletPoolManager = null!;
 
         [Header("Events")]
         [SerializeField] private UnityEvent OnShoot = null!;
@@ -25,6 +25,8 @@ namespace Starblast.Weapons
         private bool _isShooting;
         private bool _isReloading;
         private Vector2 _relativeVelocity;
+        
+        private IPoolManager _poolManager = null!;
 
         public int Ammo
         {
@@ -54,17 +56,8 @@ namespace Starblast.Weapons
         /// </summary>
         public void Initialize(WeaponDataSO weaponData)
         {
-            _weaponData = weaponData ?? throw new ArgumentNullException(nameof(weaponData));
-
-            if (_bulletPoolManager == null)
-            {
-                Debug.LogError($"BulletPoolManager not assigned to the Weapon on GameObject: {gameObject.name}");
-                enabled = false;
-                return;
-            }
-            
-            _bulletPoolManager.Initialize(_weaponData);
-
+            _weaponData = weaponData ? weaponData : throw new ArgumentNullException(nameof(weaponData));
+            _poolManager = ServiceLocator.Main.PoolManager;
             if (_muzzle == null)
             {
                 Debug.LogError($"Muzzle transform not assigned to the Weapon on GameObject: {gameObject.name}");
@@ -107,7 +100,8 @@ namespace Starblast.Weapons
 
         private void ShootBullet()
         {
-            var bullet = _bulletPoolManager.GetBullet();
+            var bulletGO = _poolManager.GetPooledObject(_weaponData.BulletPrefab);
+            var bullet = bulletGO.GetComponent<Bullet>();
             bullet.transform.SetPositionAndRotation(_muzzle.position, _muzzle.rotation);
 
             var direction = Quaternion.Euler(0, 0, 

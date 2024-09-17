@@ -48,6 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rigidbody: {fileID: 4395682662300142390}
+  _pooledObject: {fileID: 0}
   _speed: 22.5
   _lifeTime: 2
 --- !u!50 &4395682662300142390
@@ -65,7 +66,7 @@ Rigidbody2D:
   m_Mass: 0.1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2

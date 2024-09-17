@@ -28,7 +28,7 @@ namespace Starblast.Weapons
         private int _bulletCountToSpawn = 1;
         
         [field: SerializeField]
-        public Bullet BulletPrefab { get; set; }
+        public GameObject BulletPrefab { get; set; }
 
         public int GetBulletCountToSpawn => _multiBulletShoot ? _bulletCountToSpawn : 1;
     }
