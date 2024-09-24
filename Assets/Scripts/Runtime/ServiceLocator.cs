@@ -22,13 +22,8 @@ namespace Starblast
         // Services Shortcuts
         public IPoolManager PoolManager { get; private set; }
         public IMusicManager MusicManager { get; private set; }
+        public ISoundManager SoundManager { get; private set; }
         
-        /*
-        public IMusicManager AudioManager { get; private set; }
-        public IFadeToBlack FadeToBlack { get; private set; }
-        public ISceneLoader SceneLoader { get; private set; }
-        public ICommandFactory CommandFactory { get; private set; }
-        */
         
         
         private Dictionary<Type, object> _services = new Dictionary<Type, object>();
@@ -64,30 +59,17 @@ namespace Starblast
         {
             PoolManager = GetComponentInChildren<IPoolManager>();
             MusicManager = GetComponentInChildren<IMusicManager>();
+            SoundManager = GetComponentInChildren<ISoundManager>();
             Register<IPoolManager>(PoolManager);
             Register<IMusicManager>(MusicManager);
-            
-            /*
-            AudioManager = GetComponentInChildren<IMusicManager>();
-            
-            SoundManager = GetComponentInChildren<ISoundManager>();
-            FadeToBlack = GetComponentInChildren<IFadeToBlack>();
-            SceneLoader = GetComponentInChildren<ISceneLoader>();
-            CommandFactory = GetComponentInChildren<ICommandFactory>();
-            */
+            Register<ISoundManager>(SoundManager);
         }
         
         private void InitializeServices()
         {
             PoolManager.Initialize();
             MusicManager.Initialize();
-            /*
-            AudioManager.Initialize();
             SoundManager.Initialize();
-            CommandFactory.Initialize();
-            FadeToBlack.Initialize();
-            SceneLoader.Initialize();
-            */
         }
 
 
@@ -99,6 +81,16 @@ namespace Starblast
                 return;
             }
             _services.Add(typeof(T), service);
+        }
+        
+        public T Get<T>()
+        {
+            if (!_services.ContainsKey(typeof(T)))
+            {
+                Debug.LogWarning($"Service of type {typeof(T).Name} is not registered.");
+                return default;
+            }
+            return (T)_services[typeof(T)];
         }
 
         public void Unregister<T>()
