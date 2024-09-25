@@ -4,6 +4,9 @@ namespace Starblast.Audio
 {
     public abstract class APlaySound : MonoBehaviour
     {
+        [Header("Volume")]
+        [SerializeField][Range(0f, 1f)] protected float volume = 1f;
+        
         [Header("Pitch Range")]
         [SerializeField] protected float minPitch = 1f;
         [SerializeField] protected float maxPitch = 1f;

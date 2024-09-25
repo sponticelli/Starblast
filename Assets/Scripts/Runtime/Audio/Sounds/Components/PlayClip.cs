@@ -9,7 +9,8 @@ namespace Starblast.Audio
         
         public override void Play(bool origin = true)
         {
-            soundManager.Play(clip, position: origin ? Vector3.zero : transform.position, pitch: GetPitch());
+            soundManager.Play(clip, position: origin ? Vector3.zero : transform.position, 
+                pitch: GetPitch(), volume: volume);
         }
     }
 }

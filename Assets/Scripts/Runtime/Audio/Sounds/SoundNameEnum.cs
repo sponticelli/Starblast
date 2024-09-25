@@ -4,6 +4,9 @@ namespace Starblast.Audio
 {
     public enum SoundNameEnum
     {
-        Click
+        Click,
+        Shoot,
+        Thrust,
+        ThrustLoop
     }
 }

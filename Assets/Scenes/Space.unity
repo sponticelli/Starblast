@@ -24438,6 +24438,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1986175560}
   - component: {fileID: 1986175562}
+  - component: {fileID: 1986175563}
   m_Layer: 0
   m_Name: Weapon
   m_TagString: Untagged
@@ -24476,10 +24477,38 @@ MonoBehaviour:
   _muzzle: {fileID: 1556355800}
   OnShoot:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1986175563}
+        m_TargetAssemblyTypeName: Starblast.Audio.PlaySoundName, Assembly-CSharp
+        m_MethodName: Play
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   OnShootNoAmmo:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1986175563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1986175559}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbb7d3796bef4488bdd79ff9bca7aec9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  volume: 1
+  minPitch: 0.9
+  maxPitch: 1
+  soundName: 1
 --- !u!1 &1988033033
 GameObject:
   m_ObjectHideFlags: 0
@@ -26893,6 +26922,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2137273142}
   - component: {fileID: 2137273143}
+  - component: {fileID: 2137273144}
+  - component: {fileID: 2137273145}
   m_Layer: 0
   m_Name: Propulsion
   m_TagString: Untagged
@@ -26927,6 +26958,98 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16cf767f7ca04e6b817960fe4344b771, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnThrusting:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2137273144}
+        m_TargetAssemblyTypeName: Starblast.Audio.APlayLoopingSound, Assembly-CSharp
+        m_MethodName: Play
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnStopThrusting:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2137273144}
+        m_TargetAssemblyTypeName: Starblast.Audio.APlayLoopingSound, Assembly-CSharp
+        m_MethodName: Stop
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnBraking:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2137273145}
+        m_TargetAssemblyTypeName: Starblast.Audio.APlayLoopingSound, Assembly-CSharp
+        m_MethodName: Play
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnStopBraking:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2137273145}
+        m_TargetAssemblyTypeName: Starblast.Audio.APlayLoopingSound, Assembly-CSharp
+        m_MethodName: Stop
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &2137273144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2137273141}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb704accc0504f76b50ebeed7a3b94c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  volume: 0.15
+  minPitch: 0.8
+  maxPitch: 1.1
+  soundName: 3
+--- !u!114 &2137273145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2137273141}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb704accc0504f76b50ebeed7a3b94c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  volume: 0.15
+  minPitch: 0.8
+  maxPitch: 1.1
+  soundName: 2
 --- !u!1 &2138625144
 GameObject:
   m_ObjectHideFlags: 0

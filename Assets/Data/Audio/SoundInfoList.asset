@@ -16,3 +16,12 @@ MonoBehaviour:
   - _name: Click
     _clip: {fileID: 8300000, guid: 2d0c3d6f02a07471c8c78f03a341351f, type: 3}
     _type: 1
+  - _name: Shoot
+    _clip: {fileID: 8300000, guid: 0956fb004cffb448c87ea7513c912c06, type: 3}
+    _type: 0
+  - _name: Thrust
+    _clip: {fileID: 8300000, guid: f9ed03547c8c44238925cae5475173f3, type: 3}
+    _type: 0
+  - _name: ThrustLoop
+    _clip: {fileID: 8300000, guid: 1949a0e6b2d8a4afebc7a9445aed7b08, type: 3}
+    _type: 0

@@ -1,10 +1,18 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Starblast.Player.Propulsion
 {
     [AddComponentMenu("Starblast/Player/Ship Propulsion")]
     public class ShipPropulsion : MonoBehaviour
     {
+        
+        [Header("Events")]
+        [SerializeField] private UnityEvent OnThrusting = null!;
+        [SerializeField] private UnityEvent OnStopThrusting = null!;
+        [SerializeField] private UnityEvent OnBraking = null!;
+        [SerializeField] private UnityEvent OnStopBraking = null!;
+        
         private Rigidbody2D _rigidbody2D;
         private PropulsionDataSO _propulsionData;
         
@@ -14,6 +22,8 @@ namespace Starblast.Player.Propulsion
         private Vector2 _velocity;
         private float _currentRotation;
         private Transform _cachedTransform;
+        private bool _isThrusting;
+        private bool _isBraking;
         
         public delegate void VelocityChange(Vector2 newVelocity);
         public event VelocityChange OnVelocityChange;
@@ -41,6 +51,12 @@ namespace Starblast.Player.Propulsion
                 case < 0:
                     ApplyBrake(-_thrustInput);
                     break;
+                case 0:
+                    _isBraking = false;
+                    _isThrusting = false;
+                    OnStopThrusting?.Invoke();
+                    OnStopBraking?.Invoke();
+                    break;
             }
 
             _currentRotation = _rotationInput * _propulsionData.RotationSpeed;
@@ -66,11 +82,17 @@ namespace Starblast.Player.Propulsion
         {
             var accelerationThisFrame = _propulsionData.Acceleration * input;
             _velocity += (Vector2)_cachedTransform.up * (accelerationThisFrame * Time.fixedDeltaTime);
+            if (!_isThrusting) OnThrusting?.Invoke();
+            _isThrusting = true;
+            _isBraking = false;
         }
 
         private void ApplyBrake(float input)
         {
             _velocity -= _velocity.normalized * (_propulsionData.BrakingForce * input * Time.fixedDeltaTime);
+            if (!_isBraking) OnBraking?.Invoke();
+            _isBraking = true;
+            _isThrusting = false;
         }
         
         #region Physic Calculations
