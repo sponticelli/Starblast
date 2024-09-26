@@ -83,6 +83,11 @@ namespace Starblast
             _services.Add(typeof(T), service);
         }
         
+        public bool IsRegistered<T>()
+        {
+            return _services.ContainsKey(typeof(T));
+        }
+        
         public T Get<T>()
         {
             if (!_services.ContainsKey(typeof(T)))

@@ -1,3 +1,4 @@
+using Starblast.Environments;
 using Starblast.Inputs;
 using Starblast.Player.Propulsion;
 using Starblast.Player.Visuals;
@@ -27,8 +28,12 @@ namespace Starblast.Player
         
         public Rigidbody2D Rigidbody2D => _rigidbody2D;
         
+        public LevelBounds _levelBounds;
+        
         private void Awake()
         {
+            _levelBounds = ServiceLocator.Main.Get<LevelBounds>();
+            
             _propulsion.Initialize(_rigidbody2D, _propulsionData);
             _visuals.Initialize(_visualData);
             _weaponController.Initialize(_weaponData);
@@ -44,6 +49,26 @@ namespace Starblast.Player
             StopListeningToInput();
         }
         
+        private void LateUpdate()
+        {
+            HandleLevelBoundaries();
+        }
+
+        private void HandleLevelBoundaries()
+        {
+            var position = _rigidbody2D.transform.position;
+            var newPosition = _levelBounds.CalcPositionIfOutOfBounds(position);
+            
+            
+            if (position != newPosition)
+            {
+                _visuals.OnBeforeBoundsTeleport(position, newPosition);
+                _rigidbody2D.transform.position = newPosition;
+                _visuals.OnAfterBoundsTeleport(position, newPosition);
+            }
+            
+        }
+
         private void ListenToInput()
         {
             if (_inputHandler == null) return;

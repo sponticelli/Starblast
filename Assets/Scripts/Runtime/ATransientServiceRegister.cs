@@ -10,11 +10,13 @@ namespace Starblast
         protected virtual void Awake()
         {
             ServiceLocator.Main.Register<T>(Service);
+            Debug.Log($"Registered {typeof(T).Name}");
         }
 
         protected virtual void OnDestroy()
         {
             ServiceLocator.Main.Unregister<T>();
+            Debug.Log($"Unregistered {typeof(T).Name}");
         }
     }
 }

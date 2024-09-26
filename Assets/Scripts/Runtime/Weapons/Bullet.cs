@@ -1,3 +1,5 @@
+using System;
+using Starblast.Environments;
 using Starblast.Pools;
 using UnityEngine;
 
@@ -19,6 +21,16 @@ namespace Starblast.Weapons
         private Vector2 _shipVelocity;
         
         private bool _isReleased = false;
+        private LevelBounds _levelBounds;
+        
+        
+        private void OnEnable()
+        {
+            if (ServiceLocator.Main.IsRegistered<LevelBounds>())
+            {
+                _levelBounds = ServiceLocator.Main.Get<LevelBounds>();
+            }
+        }
         
         public void Shoot(Vector3 direction, Vector2 shipVelocity)
         {
@@ -45,7 +57,18 @@ namespace Starblast.Weapons
         {
             _rigidbody.velocity = (_direction * _speed) + _shipVelocity;
         }
-        
+
+        private void LateUpdate()
+        {
+            var oldPosition = _rigidbody.transform.position;
+            var updatedPosition = _levelBounds.CalcLoopingPosition(oldPosition);
+            
+            if (oldPosition != updatedPosition)
+            {
+                _rigidbody.transform.position = updatedPosition;
+            }
+            
+        }
     }
     
     
