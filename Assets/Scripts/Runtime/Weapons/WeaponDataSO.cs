@@ -8,7 +8,7 @@ namespace Starblast.Weapons
         [field: SerializeField]
         public Vector2 MuzzleOffset { get; set; }
         [field: SerializeField]
-        [field: Range(1, 100)]
+        [field: Range(1, 10000)]
         public int AmmoCapacity { get; set; } = 10; 
         
         [field: SerializeField]

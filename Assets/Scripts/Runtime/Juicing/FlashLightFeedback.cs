@@ -8,8 +8,8 @@ namespace Starblast.Juicing
 {
     public class FlashLight2DFeedback : Feedback
     {
-        [Header("References")] [SerializeField]
-        private Light2D _lightTarget;
+        [Header("References")] 
+        [SerializeField] private Light2D _lightTarget;
 
         [Header("Settings")] [SerializeField] private float _lightOnDelay = 0.01f;
         [SerializeField] private float _lightOffDelay = 0.01f;

@@ -3306,6 +3306,7 @@ GameObject:
   - component: {fileID: 219126004}
   - component: {fileID: 219126006}
   - component: {fileID: 219126007}
+  - component: {fileID: 219126008}
   m_Layer: 0
   m_Name: cm
   m_TagString: Untagged
@@ -3362,6 +3363,23 @@ MonoBehaviour:
   m_YawDamping: 0
   m_RollDamping: 0
   m_AngularDamping: 0
+--- !u!114 &219126008
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 219126003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68bb026fafb42b14791938953eaace77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NoiseProfile: {fileID: 11400000, guid: 69ce8388f6785dd4c8c39915efece2f4, type: 2}
+  m_PivotOffset: {x: 0, y: 0, z: 0}
+  m_AmplitudeGain: 0
+  m_FrequencyGain: 1
+  mNoiseOffsets: {x: 0, y: 0, z: 0}
 --- !u!1 &219309699
 GameObject:
   m_ObjectHideFlags: 0
@@ -7735,7 +7753,7 @@ Camera:
   far clip plane: 1000
   field of view: 10
   orthographic: 1
-  orthographic size: 8.339286
+  orthographic size: 8.4375
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -9551,7 +9569,7 @@ MonoBehaviour:
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.897
   m_Color: {r: 1, g: 0.9532509, b: 0, a: 1}
-  m_Intensity: 1000
+  m_Intensity: 35
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
   m_ApplyToSortingLayers: 00000000093788907dd760c65be29db5f79cf006
@@ -9564,7 +9582,7 @@ MonoBehaviour:
   m_NormalMapQuality: 2
   m_UseNormalMap: 0
   m_ShadowIntensityEnabled: 1
-  m_ShadowIntensity: 1
+  m_ShadowIntensity: 0.185
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
@@ -9998,8 +10016,8 @@ Transform:
   m_GameObject: {fileID: 692531064}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0.38268343, w: 0.92387956}
-  m_LocalPosition: {x: 0, y: 0.25, z: 0}
-  m_LocalScale: {x: 0.25, y: 0.25, z: 1}
+  m_LocalPosition: {x: 0.005, y: -0.014, z: 0}
+  m_LocalScale: {x: 0.33, y: 0.33, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1556355800}
@@ -12936,6 +12954,8 @@ GameObject:
   - component: {fileID: 983447442}
   - component: {fileID: 983447440}
   - component: {fileID: 983447443}
+  - component: {fileID: 983447444}
+  - component: {fileID: 983447445}
   m_Layer: 0
   m_Name: ShootFeedback
   m_TagString: Untagged
@@ -12989,6 +13009,8 @@ MonoBehaviour:
   feedbacks:
   - {fileID: 983447440}
   - {fileID: 983447443}
+  - {fileID: 983447444}
+  - {fileID: 983447445}
 --- !u!114 &983447443
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13005,6 +13027,41 @@ MonoBehaviour:
   _flashDuration: 0.03
   _flashColor: {r: 1, g: 0.9529412, b: 0.27058825, a: 0.6862745}
   _defaultColor: {r: 1, g: 1, b: 1, a: 0}
+--- !u!114 &983447444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 983447439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57413049a9164a4691184e4783eac0e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _objectToShake: {fileID: 1986175559}
+  _duration: 0.05
+  _strength: 0.2
+  _vibrato: 10
+  _randomness: 0
+  _snapping: 0
+  _fadeOut: 1
+--- !u!114 &983447445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 983447439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a74d250ca0fb4c18a56dd67e737c668e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _camera: {fileID: 0}
+  _amplitude: 1.3
+  _intensity: 0
+  _duration: 0.1
 --- !u!1 &989979581
 GameObject:
   m_ObjectHideFlags: 0
