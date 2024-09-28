@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ebdb0abf09634967aa4778cf5608576c, type: 3}
-  m_Name: SpaceshipWeaponData
+  m_Name: BulletGunWeaponData
   m_EditorClassIdentifier: 
   <MuzzleOffset>k__BackingField: {x: 0, y: 0.528}
   <AmmoCapacity>k__BackingField: 100

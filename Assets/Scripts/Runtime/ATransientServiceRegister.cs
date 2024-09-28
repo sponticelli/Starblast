@@ -15,6 +15,7 @@ namespace Starblast
 
         protected virtual void OnDestroy()
         {
+            if (ServiceLocator.Main == null) return;
             ServiceLocator.Main.Unregister<T>();
             Debug.Log($"Unregistered {typeof(T).Name}");
         }

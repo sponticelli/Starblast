@@ -107,5 +107,17 @@ namespace Starblast
             }
             _services.Remove(typeof(T));
         }
+        
+        public void UnregisterAll()
+        {
+            _services.Clear();
+        }
+        
+        private void OnDestroy()
+        {
+            if (Main != this) return;
+            UnregisterAll();
+            Main = null;
+        }
     }
 }

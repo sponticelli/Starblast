@@ -15,11 +15,14 @@ namespace Starblast.Weapons
         [Header("References")]
         [SerializeField] private Transform _muzzle = null!;
 
+        [Header("Settings")]
+        [SerializeField] private WeaponDataSO _weaponData = null!;
+        
         [Header("Events")]
         [SerializeField] private UnityEvent OnShoot = null!;
         [SerializeField] private UnityEvent OnShootNoAmmo = null!;
         
-        private WeaponDataSO _weaponData = null!;
+        
 
         private int _ammo;
         private bool _isShooting;
