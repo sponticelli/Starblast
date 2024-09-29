@@ -19,6 +19,8 @@ namespace Starblast.Environments
         private Vector2 _mins;
         private Vector2 _maxs;
 
+        public Vector2 Size => _size;
+        
 
         private void Start()
         {

@@ -67,8 +67,6 @@ namespace Starblast.Weapons
                 enabled = false;
                 return;
             }
-
-            _muzzle.localPosition = _weaponData.MuzzleOffset;
         }
         
 

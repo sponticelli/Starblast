@@ -6,13 +6,16 @@ namespace Starblast.Weapons
     public class WeaponsController : MonoBehaviour
     {
         [Header("References")]
-        [SerializeField] private Weapon _weapon;
+        [SerializeField] private Weapon[] _weapons;
         
         private IActorInputHandler _inputHandler;
         
         public void Initialize(WeaponDataSO weaponData)
         {
-            _weapon.Initialize(weaponData);
+            foreach (var weapon in _weapons)
+            {
+                weapon.Initialize(weaponData);
+            }
         }
         
 
@@ -32,19 +35,26 @@ namespace Starblast.Weapons
         
         public void Shoot()
         {
-            if (_weapon == null) return;
-            _weapon.TryShooting();
+            foreach (var weapon in _weapons)
+            {
+                weapon.TryShooting();
+            }
         }
 
         public void StopShooting()
         {
-            if (_weapon == null) return;
-            _weapon.StopShooting();
+            foreach (var weapon in _weapons)
+            {
+                weapon.StopShooting();
+            }
         }
 
         public void OnVelocityChange(Vector2 velocity)
         {
-            _weapon.SetRelativeVelocity(velocity);
+            foreach (var weapon in _weapons)
+            {
+                weapon.SetRelativeVelocity(velocity);
+            }
         }
     }
 }
