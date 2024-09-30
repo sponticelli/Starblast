@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0aa2ce3cce4c4365a386c341e66cab96, type: 3}
   m_Name: PlayerShipVisualData
   m_EditorClassIdentifier: 
-  <MaxRotationAngle>k__BackingField: 45
+  <MaxRotationAngle>k__BackingField: 30
   <RotationSpeed>k__BackingField: 40
   <ReturnToZeroFactor>k__BackingField: 3
