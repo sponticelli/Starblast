@@ -648,15 +648,15 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
+    x: 0.105444126
+    y: 0.5989305
+    width: 0.22922635
+    height: 0.22918259
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 10
   orthographic: 1
-  orthographic size: 9.090278
+  orthographic size: 6.25
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -703,8 +703,8 @@ MonoBehaviour:
   m_AssetsPPU: 24
   m_RefResolutionX: 400
   m_RefResolutionY: 300
-  m_CropFrame: 0
-  m_GridSnapping: 0
+  m_CropFrame: 3
+  m_GridSnapping: 1
   m_FilterMode: 0
   m_UpscaleRT: 0
   m_PixelSnapping: 0
@@ -1319,12 +1319,12 @@ SpriteRenderer:
   m_SortingLayerID: 116432119
   m_SortingLayer: 5
   m_SortingOrder: 0
-  m_Sprite: {fileID: -726089919, guid: f034d3aa5833c4693ae38dea47b535d9, type: 3}
+  m_Sprite: {fileID: -1066136714, guid: 7672f53ab93314f119cbfefacd286c0d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.18, y: 0.17}
+  m_Size: {x: 0.8125, y: 1.9375}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -1416,7 +1416,7 @@ Transform:
   m_GameObject: {fileID: 1988033033}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.009, y: -0.532, z: 0}
+  m_LocalPosition: {x: -0.003, y: -0.501, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1504,8 +1504,8 @@ TrailRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0, g: 1, b: 0.94470406, a: 0.7764706}
-      key1: {r: 0, g: 0.9032259, b: 1, a: 0.105882354}
+      key0: {r: 1, g: 1, b: 1, a: 0.7764706}
+      key1: {r: 0.9150943, g: 0.9150943, b: 0.9150943, a: 0.105882354}
       key2: {r: 0.050980393, g: 0.21176471, b: 0.22745098, a: 1}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
