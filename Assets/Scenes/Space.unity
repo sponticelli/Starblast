@@ -648,15 +648,15 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.105444126
-    y: 0.5989305
-    width: 0.22922635
-    height: 0.22918259
+    x: 0.041260745
+    y: 0.041252866
+    width: 0.9169054
+    height: 0.91673034
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 10
   orthographic: 1
-  orthographic size: 6.25
+  orthographic size: 8.333333
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1474,7 +1474,7 @@ TrailRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.96538544
+        value: 1
         inSlope: 0
         outSlope: 0
         tangentMode: 0
