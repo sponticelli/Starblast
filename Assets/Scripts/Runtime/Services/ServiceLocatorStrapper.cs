@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Starblast
+namespace Starblast.Services
 {
     [DefaultExecutionOrder(ExecutionOrder.ServiceLocatorStrapper)]
     public class ServiceLocatorStrapper : MonoBehaviour

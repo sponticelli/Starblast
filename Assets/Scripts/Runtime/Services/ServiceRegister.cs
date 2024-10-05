@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Starblast
+namespace Starblast.Services
 {
     public abstract class AServiceRegister<T> : MonoBehaviour 
     {

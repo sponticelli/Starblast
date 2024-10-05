@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using Starblast.Audio;
 using Starblast.Pools;
-#if UNITY_EDITOR
 using UnityEditor;
-#endif
 using UnityEngine;
+#if UNITY_EDITOR
+#endif
 
-namespace Starblast
+namespace Starblast.Services
 {
 #if UNITY_EDITOR
     [InitializeOnLoad]

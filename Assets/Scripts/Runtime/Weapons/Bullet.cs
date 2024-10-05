@@ -1,6 +1,8 @@
 using System;
+using Starblast.Entities;
 using Starblast.Environments;
 using Starblast.Pools;
+using Starblast.Services;
 using UnityEngine;
 
 
@@ -15,6 +17,7 @@ namespace Starblast.Weapons
         [Header("Configuration")]
         [SerializeField] private float _speed = 10f;
         [SerializeField] private float _lifeTime = 2f;
+        [SerializeField] private float _damage = 1f;
         
         private float _currentLifeTime;
         private Vector2 _direction;
@@ -46,13 +49,18 @@ namespace Starblast.Weapons
             _currentLifeTime -= Time.deltaTime;
             if (_currentLifeTime <= 0 && !_isReleased)
             {
-                _isReleased = true;
-                if (_pooledObject == null) _pooledObject = GetComponent<PooledObject>();
-                _pooledObject.ReturnToPool();
+                Die();
             }
 
         }
-        
+
+        private void Die()
+        {
+            _isReleased = true;
+            if (_pooledObject == null) _pooledObject = GetComponent<PooledObject>();
+            _pooledObject.ReturnToPool();
+        }
+
         private void FixedUpdate()
         {
             _rigidbody.velocity = (_direction * _speed) + _shipVelocity;
@@ -69,6 +77,30 @@ namespace Starblast.Weapons
             }
             
         }
+        
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (_isReleased) return;
+            var damageable = other.gameObject.GetComponent<IDamageable>();
+            if (damageable != null)
+            {
+                damageable.TakeDamage(_damage);
+            }
+            Die();
+        }
+        
+        private void OnCollisionEnter2D(Collision2D other)
+        {
+            if (_isReleased) return;
+            var damageable = other.gameObject.GetComponent<IDamageable>();
+            if (damageable != null)
+            {
+                damageable.TakeDamage(_damage);
+            }
+            Die();
+        }
+        
+        
     }
     
     

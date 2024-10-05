@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99609a8465384048a41c5a158c871310, type: 3}
   m_Name: PlayerPropulsionData
   m_EditorClassIdentifier: 
-  _maxSpeed: 20
-  _acceleration: 4
+  _maxSpeed: 8
+  _acceleration: 0.5
   _brakingForce: 1
   _speedToManeuverability:
     serializedVersion: 2
@@ -39,7 +39,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  _rotationSpeed: 180
+  _rotationSpeed: 250
   _forwardAutoBrakeFactor: 0.15
   _orthogonalAutoBrakeFactor: 20
   _autoBrakeThreshold: 1.1

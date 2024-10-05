@@ -1,4 +1,5 @@
 using System;
+using Starblast.Services;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -7,6 +8,7 @@ namespace Starblast.Environments
     /// <summary>
     /// It teleports objects to the other side of the camera when they are far enough from the player.
     /// </summary>
+    [DefaultExecutionOrder(ExecutionOrder.Services)]
     public class LevelBounds : MonoBehaviour, IInitializable
     {
         [Header("Settings")]
@@ -20,6 +22,8 @@ namespace Starblast.Environments
         private Vector2 _maxs;
 
         public Vector2 Size => _size;
+        public Vector2 Mins => _mins;
+        public Vector2 Maxs => _maxs;
         
 
         private void Start()

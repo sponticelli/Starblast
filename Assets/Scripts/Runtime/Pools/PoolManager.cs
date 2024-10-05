@@ -37,57 +37,62 @@ namespace Starblast.Pools
 
             foreach (var obj in pooledObjects)
             {
-                obj.poolParent = new GameObject(obj.prefab.name + "Pool").transform;
-                obj.poolParent.SetParent(transform);
+                CreatePool(obj);
+            }
+        }
 
-                ObjectPool<GameObject> pool = new ObjectPool<GameObject>(
-                    createFunc: () =>
-                    {
-                        GameObject newObj = Instantiate(obj.prefab, obj.poolParent);
-                        newObj.name = obj.prefab.name + " " + obj.poolParent.childCount;
-                        PooledObject pooledObj = newObj.AddComponent<PooledObject>();
-                        pooledObj.SetPool(this, obj.prefab);
-                        newObj.SetActive(false);
-                        return newObj;
-                    },
-                    actionOnGet: (GameObject pooledObject) =>
-                    {
-                        pooledObject.SetActive(true);
-                        if (!activeObjects.ContainsKey(obj.prefab))
-                        {
-                            activeObjects[obj.prefab] = new List<GameObject>();
-                        }
+        private void CreatePool(PooledObjectInfo obj)
+        {
+            obj.poolParent = new GameObject(obj.prefab.name + "Pool").transform;
+            obj.poolParent.SetParent(transform);
 
-                        activeObjects[obj.prefab].Add(pooledObject);
-                    },
-                    actionOnRelease: (GameObject pooledObject) =>
+            ObjectPool<GameObject> pool = new ObjectPool<GameObject>(
+                createFunc: () =>
+                {
+                    GameObject newObj = Instantiate(obj.prefab, obj.poolParent);
+                    newObj.name = obj.prefab.name + " " + obj.poolParent.childCount;
+                    PooledObject pooledObj = newObj.AddComponent<PooledObject>();
+                    pooledObj.SetPool(this, obj.prefab);
+                    newObj.SetActive(false);
+                    return newObj;
+                },
+                actionOnGet: (GameObject pooledObject) =>
+                {
+                    pooledObject.SetActive(true);
+                    if (!activeObjects.ContainsKey(obj.prefab))
                     {
-                        pooledObject.SetActive(false);
-                        pooledObject.transform.SetParent(obj.poolParent);
-                        if (activeObjects.ContainsKey(obj.prefab))
-                        {
-                            activeObjects[obj.prefab].Remove(pooledObject);
-                        }
-                    },
-                    actionOnDestroy: (GameObject pooledObject) => Destroy(pooledObject),
-                    collectionCheck: false,
-                    defaultCapacity: obj.initialPoolSize,
-                    maxSize: obj.maxPoolSize
-                );
+                        activeObjects[obj.prefab] = new List<GameObject>();
+                    }
 
-                pools.Add(obj.prefab, pool);
+                    activeObjects[obj.prefab].Add(pooledObject);
+                },
+                actionOnRelease: (GameObject pooledObject) =>
+                {
+                    pooledObject.SetActive(false);
+                    pooledObject.transform.SetParent(obj.poolParent);
+                    if (activeObjects.ContainsKey(obj.prefab))
+                    {
+                        activeObjects[obj.prefab].Remove(pooledObject);
+                    }
+                },
+                actionOnDestroy: (GameObject pooledObject) => Destroy(pooledObject),
+                collectionCheck: false,
+                defaultCapacity: obj.initialPoolSize,
+                maxSize: obj.maxPoolSize
+            );
+
+            pools.Add(obj.prefab, pool);
                 
                 
-                GameObject[] _items = new GameObject[obj.initialPoolSize];
-                for (int i = 0; i < obj.initialPoolSize; i++)
-                {
-                    _items[i] = pool.Get();
-                }
+            GameObject[] items = new GameObject[obj.initialPoolSize];
+            for (int i = 0; i < obj.initialPoolSize; i++)
+            {
+                items[i] = pool.Get();
+            }
 
-                for (int i = 0; i < obj.initialPoolSize; i++)
-                {
-                    pool.Release(_items[i]);
-                }
+            for (int i = 0; i < obj.initialPoolSize; i++)
+            {
+                pool.Release(items[i]);
             }
         }
 
@@ -155,6 +160,50 @@ namespace Starblast.Pools
             activeObjects.Clear();
         }
 
-        
+        public void CreatePool(GameObject prefab, int initialPoolSize, int maxPoolSize)
+        {
+            // Check if pool already exists
+            if (pools.ContainsKey(prefab))
+            {
+                Debug.LogWarning($"Pool for prefab {prefab.name} already exists.");
+                return;
+            }
+            
+            
+            PooledObjectInfo obj = new PooledObjectInfo
+            {
+                prefab = prefab,
+                initialPoolSize = initialPoolSize,
+                maxPoolSize = maxPoolSize
+            };
+            pooledObjects.Add(obj);
+            CreatePool(obj);
+        }
+
+        public void DestroyPool(GameObject prefab)
+        {
+            // Check if pool exists
+            if (!pools.ContainsKey(prefab))
+            {
+                Debug.LogWarning($"Pool for prefab {prefab.name} doesn't exist.");
+                return;
+            }
+            
+            // Return all active objects to the pool
+            if (activeObjects.TryGetValue(prefab, out List<GameObject> objects))
+            {
+                foreach (GameObject obj in objects)
+                {
+                    ReturnPooledObject(prefab, obj);
+                }
+            }
+            
+            // Destroy pool parent
+            if (pooledObjects.Find(x => x.prefab == prefab) is { } poi)
+            {
+                Destroy(poi.poolParent.gameObject);
+                pooledObjects.Remove(poi);
+            }
+        }
     }
 }

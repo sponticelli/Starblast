@@ -1,4 +1,4 @@
-namespace Starblast
+namespace Starblast.Services
 {
     public interface IInitializable
     {

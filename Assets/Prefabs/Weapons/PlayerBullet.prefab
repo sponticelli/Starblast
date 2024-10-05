@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 3926977136805972190}
   - component: {fileID: 4395682662300142390}
   - component: {fileID: 6897151793095087298}
-  m_Layer: 0
-  m_Name: Bullet
+  m_Layer: 8
+  m_Name: PlayerBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -51,6 +51,7 @@ MonoBehaviour:
   _pooledObject: {fileID: 0}
   _speed: 22.5
   _lifeTime: 2
+  _damage: 0.1
 --- !u!50 &4395682662300142390
 Rigidbody2D:
   serializedVersion: 4
@@ -107,7 +108,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: -0.000000007450581, y: 0.09378782}
@@ -133,7 +134,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7196244173117879599}
   - component: {fileID: 6541462308332100902}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: BulletRenderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}

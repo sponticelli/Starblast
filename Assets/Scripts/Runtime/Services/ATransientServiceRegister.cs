@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Starblast
+namespace Starblast.Services
 {
     [DefaultExecutionOrder(ExecutionOrder.TransientServiceRegister)]
     public abstract class ATransientServiceRegister<T> : MonoBehaviour where T : IInitializable

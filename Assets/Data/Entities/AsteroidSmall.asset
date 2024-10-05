@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da1a2a3e01ec4b678554201ec1435b00, type: 3}
+  m_Name: AsteroidSmall
+  m_EditorClassIdentifier: 
+  size: 1
+  health: 2
+  splittingInfo:
+  - size: 0
+    minSplitCount: 2
+    maxSplitCount: 3
+    spawnRadius: 0.5
+  speed: 2.5
+  mass: 4
+  rotationSpeed: 50

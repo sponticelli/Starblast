@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &4510387633960563586
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 187564021932564962, guid: e76844b3dcd104d8d98740d01506fda5, type: 3}
+      propertyPath: m_Size.y
+      value: 0.25906444
+      objectReference: {fileID: 0}
+    - target: {fileID: 187564021932564962, guid: e76844b3dcd104d8d98740d01506fda5, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.00048393756
+      objectReference: {fileID: 0}
+    - target: {fileID: 4658286050968346983, guid: e76844b3dcd104d8d98740d01506fda5, type: 3}
+      propertyPath: m_Name
+      value: AsteroidMini B
+      objectReference: {fileID: 0}
+    - target: {fileID: 4683521214062241351, guid: e76844b3dcd104d8d98740d01506fda5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.5668999
+      objectReference: {fileID: 0}
+    - target: {fileID: 4683521214062241351, guid: e76844b3dcd104d8d98740d01506fda5, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.18525468
+      objectReference: {fileID: 0}
+    - target: {fileID: 4683521214062241351, guid: e76844b3dcd104d8d98740d01506fda5, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.019127935
+      objectReference: {fileID: 0}
+    - target: {fileID: 4683521214062241351, guid: e76844b3dcd104d8d98740d01506fda5, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4683521214062241351, guid: e76844b3dcd104d8d98740d01506fda5, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4683521214062241351, guid: e76844b3dcd104d8d98740d01506fda5, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4683521214062241351, guid: e76844b3dcd104d8d98740d01506fda5, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4683521214062241351, guid: e76844b3dcd104d8d98740d01506fda5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4683521214062241351, guid: e76844b3dcd104d8d98740d01506fda5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4683521214062241351, guid: e76844b3dcd104d8d98740d01506fda5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5912381452271853727, guid: e76844b3dcd104d8d98740d01506fda5, type: 3}
+      propertyPath: m_Radius
+      value: 0.13857412
+      objectReference: {fileID: 0}
+    - target: {fileID: 5912381452271853727, guid: e76844b3dcd104d8d98740d01506fda5, type: 3}
+      propertyPath: m_Offset.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7506717718770374846, guid: e76844b3dcd104d8d98740d01506fda5, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 2129beba93c4f4f6495b0ffc5a79a81e, type: 3}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e76844b3dcd104d8d98740d01506fda5, type: 3}

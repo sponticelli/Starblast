@@ -1,3 +1,4 @@
+using Starblast.Services;
 using UnityEngine;
 
 namespace Starblast.Pools
@@ -8,5 +9,8 @@ namespace Starblast.Pools
         void ReturnPooledObject(GameObject prefab, GameObject obj);
         void ReturnAllPooledObjects();
         void CleanupPools();
+        
+        void CreatePool(GameObject prefab, int initialPoolSize, int maxPoolSize);
+        void DestroyPool(GameObject prefab);
     }
 }
