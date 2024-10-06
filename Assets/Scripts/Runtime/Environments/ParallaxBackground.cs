@@ -4,36 +4,27 @@ namespace Starblast.Environments
 {
     public class ParallaxBackground : MonoBehaviour
     {
-        [Header("Parallax Settings")]
-        public Transform target;           // The player's Transform
-        public float parallaxSpeed = 0.5f; // The speed at which the background moves
-
-        private Vector3 previousTargetPosition;
+        public float parallaxSpeed;
+        private float length;
+        private float startpos;
+        public GameObject cam;
 
         void Start()
         {
-            if (target == null)
-            {
-                Debug.LogError("ParallaxBackground script requires a target to function.");
-                return;
-            }
-
-            // Store the initial position of the target
-            previousTargetPosition = target.position;
+            startpos = transform.position.x;
+            length = GetComponent<SpriteRenderer>().bounds.size.x;
         }
 
-        void Update()
+        void LateUpdate()
         {
-            if (target == null) return;
+            float temp = (cam.transform.position.x * (1 - parallaxSpeed));
+            float dist = (cam.transform.position.x * parallaxSpeed);
 
-            // Calculate the difference in the target's position since the last frame
-            Vector3 deltaMovement = target.position - previousTargetPosition;
+            transform.position = new Vector3(startpos + dist, transform.position.y, transform.position.z);
 
-            // Move the background opposite to the target's movement, scaled by parallaxSpeed
-            transform.position -= deltaMovement * parallaxSpeed;
-
-            // Update the previous target position for the next frame
-            previousTargetPosition = target.position;
+            // Loop the background
+            if (temp > startpos + length) startpos += length;
+            else if (temp < startpos - length) startpos -= length;
         }
     }
 }
