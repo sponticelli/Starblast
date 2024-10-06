@@ -7,6 +7,8 @@ namespace Starblast.Audio
         Click,
         Shoot,
         Thrust,
-        ThrustLoop
+        ThrustLoop,
+        AsteroidHit,
+        AsteroidExplosion
     }
 }

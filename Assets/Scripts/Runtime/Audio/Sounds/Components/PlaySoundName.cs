@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Starblast.Audio
 {
-    public class PlaySoundName : APlaySound
+    public class PlaySoundName : BasePlaySound
     {
         [Header("Sound Name")]
         [SerializeField] private SoundNameEnum soundName;

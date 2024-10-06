@@ -1,5 +1,7 @@
+using Starblast.Pools;
 using Starblast.Services;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Starblast.Entities.Asteroids
 {
@@ -12,7 +14,12 @@ namespace Starblast.Entities.Asteroids
         [SerializeField] private Rigidbody2D rb;
         [SerializeField] private AsteroidMovement movement;
         
+        [Header("Events")]
+        [SerializeField] private UnityEvent onDestroyed;
+        [SerializeField] private UnityEvent onDamaged;
+        
         private float currentHealth;
+        private PooledObject _pooledObject;
         
         
         private void OnEnable()
@@ -23,11 +30,18 @@ namespace Starblast.Entities.Asteroids
                 movement.Initialize(rb,  asteroidData.speed, asteroidData.rotationSpeed);
             }
             currentHealth = asteroidData.health;
+            if (_pooledObject == null) _pooledObject = GetComponent<PooledObject>();
         }
 
         public void TakeDamage(float damage)
         {
+            if (currentHealth <= 0)
+            {
+                return;
+            }
+            
             currentHealth -= damage;
+            onDamaged?.Invoke();
             if (currentHealth <= 0)
             {
                 Die();
@@ -36,6 +50,7 @@ namespace Starblast.Entities.Asteroids
 
         private void Die()
         {
+            onDestroyed?.Invoke();
             if (asteroidData.size != AsteroidSize.Mini)
             {
                 AsteroidFactory factory = ServiceLocator.Main.Get<AsteroidFactory>();
@@ -52,7 +67,12 @@ namespace Starblast.Entities.Asteroids
                 }
             }
 
-            Destroy(gameObject);
+            if (_pooledObject == null)
+            {
+                Destroy(gameObject);
+                return;
+            }
+            _pooledObject.ReturnToPool();
         }
     }
 }

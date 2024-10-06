@@ -5,7 +5,9 @@ using UnityEditor;
 
 namespace Starblast.Audio
 {
+#if UNITY_EDITOR
     [InitializeOnLoad]
+#endif
     public static class SoundNameEnumExtensions
     {
         private static Dictionary<SoundNameEnum, string> _soundNameCache;

@@ -396,7 +396,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76e566fbde4a4e2aa2009429a7fea77e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxSources: 10
+  _maxSources: 16
   _audioSourcePrefab: {fileID: 642539227173577113, guid: 4a44298deea6c4205b7ea914877c56dd, type: 3}
   _sfxGroup: {fileID: 3054324143747922593, guid: 1f89b67facafe40f5b5949319b1e5ffb, type: 2}
   _uiGroup: {fileID: -660870140486629917, guid: 1f89b67facafe40f5b5949319b1e5ffb, type: 2}

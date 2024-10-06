@@ -25,3 +25,9 @@ MonoBehaviour:
   - _name: ThrustLoop
     _clip: {fileID: 8300000, guid: 1949a0e6b2d8a4afebc7a9445aed7b08, type: 3}
     _type: 0
+  - _name: AsteroidHit
+    _clip: {fileID: 8300000, guid: 31f44aed7e6e341a8997ee8b568a8747, type: 3}
+    _type: 0
+  - _name: AsteroidExplosion
+    _clip: {fileID: 8300000, guid: 4781b58b99b9f470998bdb0f422a25af, type: 3}
+    _type: 0

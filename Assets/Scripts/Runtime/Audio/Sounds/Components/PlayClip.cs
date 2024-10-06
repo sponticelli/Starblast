@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Starblast.Audio
 {
-    public class PlaySoundClip : APlaySound
+    public class PlaySoundClip : BasePlaySound
     {
         [Header("Clip")]
         [SerializeField] private AudioClip clip;

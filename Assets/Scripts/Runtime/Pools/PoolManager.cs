@@ -20,6 +20,7 @@ namespace Starblast.Pools
 
         private Dictionary<GameObject, ObjectPool<GameObject>> pools;
         private Dictionary<GameObject, List<GameObject>> activeObjects;
+        private bool _isApplicationQuitting;
 
         public bool IsInitialized { get; private set; }
 
@@ -68,6 +69,7 @@ namespace Starblast.Pools
                 },
                 actionOnRelease: (GameObject pooledObject) =>
                 {
+                    if (pooledObject == null) return;
                     pooledObject.SetActive(false);
                     pooledObject.transform.SetParent(obj.poolParent);
                     if (activeObjects.ContainsKey(obj.prefab))
@@ -136,24 +138,19 @@ namespace Starblast.Pools
             }
         }
 
-        private void OnDestroy()
-        {
-            CleanupPools();
-        }
-
         public void CleanupPools()
         {
-            foreach (var pool in pools.Values)
-            {
-                pool.Clear();
-            }
-
             foreach (var obj in pooledObjects)
             {
                 if (obj.poolParent != null)
                 {
                     Destroy(obj.poolParent.gameObject);
                 }
+            }
+            
+            foreach (var pool in pools.Values)
+            {
+                pool.Clear();
             }
 
             pools.Clear();
@@ -182,6 +179,10 @@ namespace Starblast.Pools
 
         public void DestroyPool(GameObject prefab)
         {
+            if (_isApplicationQuitting)
+            {
+                return;
+            }
             // Check if pool exists
             if (!pools.ContainsKey(prefab))
             {
@@ -204,6 +205,11 @@ namespace Starblast.Pools
                 Destroy(poi.poolParent.gameObject);
                 pooledObjects.Remove(poi);
             }
+        }
+
+        private void OnApplicationQuit()
+        {
+            _isApplicationQuitting = true;
         }
     }
 }

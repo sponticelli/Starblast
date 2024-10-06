@@ -4,6 +4,7 @@ using Starblast.Environments;
 using Starblast.Pools;
 using Starblast.Services;
 using UnityEngine;
+using UnityEngine.Events;
 
 
 namespace Starblast.Weapons
@@ -18,6 +19,9 @@ namespace Starblast.Weapons
         [SerializeField] private float _speed = 10f;
         [SerializeField] private float _lifeTime = 2f;
         [SerializeField] private float _damage = 1f;
+        
+        [Header("Events")]
+        [SerializeField] private UnityEvent _onBulletHit;
         
         private float _currentLifeTime;
         private Vector2 _direction;
@@ -86,6 +90,7 @@ namespace Starblast.Weapons
             {
                 damageable.TakeDamage(_damage);
             }
+            _onBulletHit?.Invoke();
             Die();
         }
         

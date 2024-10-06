@@ -6,7 +6,6 @@ namespace Starblast.Weapons
     public class WeaponDataSO : ScriptableObject
     {
         [field: SerializeField]
-        [field: Range(1, 10000)]
         public int AmmoCapacity { get; set; } = 10; 
         
         [field: SerializeField]

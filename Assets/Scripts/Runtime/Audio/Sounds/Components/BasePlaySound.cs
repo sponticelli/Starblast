@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Starblast.Audio
 {
-    public abstract class APlaySound : MonoBehaviour
+    public abstract class BasePlaySound : MonoBehaviour
     {
         [Header("Volume")]
         [SerializeField][Range(0f, 1f)] protected float volume = 1f;
@@ -15,13 +15,12 @@ namespace Starblast.Audio
         
         protected ISoundManager soundManager;
         
+        public abstract void Play(bool origin = true);
+        
         protected virtual void Start()
         {
             soundManager = ServiceLocator.Main.SoundManager;
         }
-        
-        public abstract void Play(bool origin = true);
-        
         
         protected float GetPitch()
         {
