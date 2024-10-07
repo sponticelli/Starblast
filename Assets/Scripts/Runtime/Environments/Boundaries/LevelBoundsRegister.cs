@@ -1,7 +1,7 @@
 using Starblast.Services;
 using UnityEngine;
 
-namespace Starblast.Environments
+namespace Starblast.Environments.Boundaries
 {
     [DefaultExecutionOrder(ExecutionOrder.TransientServiceRegister)]
     public class LevelBoundsRegister : ATransientServiceRegister<LevelBounds>

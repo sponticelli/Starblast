@@ -1,6 +1,7 @@
 using System;
 using Starblast.Entities;
 using Starblast.Environments;
+using Starblast.Environments.Boundaries;
 using Starblast.Pools;
 using Starblast.Services;
 using UnityEngine;

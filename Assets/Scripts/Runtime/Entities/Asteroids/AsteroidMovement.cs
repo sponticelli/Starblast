@@ -1,4 +1,5 @@
 using Starblast.Environments;
+using Starblast.Environments.Boundaries;
 using Starblast.Services;
 using UnityEngine;
 

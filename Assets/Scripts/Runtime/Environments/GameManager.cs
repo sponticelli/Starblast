@@ -1,5 +1,6 @@
 using System.Collections;
 using Starblast.Entities.Asteroids;
+using Starblast.Environments.Boundaries;
 using Starblast.Services;
 using UnityEngine;
 
