@@ -69,18 +69,6 @@ namespace Starblast.Weapons
         {
             _rigidbody.velocity = (_direction * _speed) + _shipVelocity;
         }
-
-        private void LateUpdate()
-        {
-            var oldPosition = _rigidbody.transform.position;
-            var updatedPosition = _levelBounds.CalcLoopingPosition(oldPosition);
-            
-            if (oldPosition != updatedPosition)
-            {
-                _rigidbody.transform.position = updatedPosition;
-            }
-            
-        }
         
         private void OnTriggerEnter2D(Collider2D other)
         {

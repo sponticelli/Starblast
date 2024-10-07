@@ -10,7 +10,6 @@ namespace Starblast.Environments
     {
         [Header("Game Settings")]
         [SerializeField] private int initialAsteroidCount = 20;
-        [SerializeField] private float minRadius = 2f;
         
         
         public bool IsInitialized { get; private set;  }
@@ -43,11 +42,19 @@ namespace Starblast.Environments
         
         private Vector3 GetRandomSpawnPosition()
         {
-            var spawnPosition = new Vector3(Random.Range(levelBounds.Mins.x, levelBounds.Maxs.x), 
-                Random.Range(levelBounds.Mins.y, levelBounds.Maxs.y), 0);
-            var direction = spawnPosition;
-            direction.Normalize();
-            spawnPosition += direction * minRadius;
+            var minRadius = levelBounds.InnerRadius / 2;
+            var maxRadius = levelBounds.InnerRadius;
+            
+            var randomAngle = Random.Range(0, 360);
+            var randomRadius = Random.Range(minRadius, maxRadius);
+            
+            var spawnPosition = new Vector3(
+                Mathf.Cos(randomAngle) * randomRadius,
+                Mathf.Sin(randomAngle) * randomRadius,
+                0
+            );
+            
+            
             return spawnPosition;
         }
     }

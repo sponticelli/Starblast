@@ -49,26 +49,7 @@ namespace Starblast.Player
         {
             StopListeningToInput();
         }
-        
-        private void LateUpdate()
-        {
-            HandleLevelBoundaries();
-        }
 
-        private void HandleLevelBoundaries()
-        {
-            var position = _rigidbody2D.transform.position;
-            var newPosition = _levelBounds.CalcPositionIfOutOfBounds(position);
-            
-            
-            if (position != newPosition)
-            {
-                _visuals.OnBeforeBoundsTeleport(position, newPosition);
-                _rigidbody2D.transform.position = newPosition;
-                _visuals.OnAfterBoundsTeleport(position, newPosition);
-            }
-            
-        }
 
         private void ListenToInput()
         {

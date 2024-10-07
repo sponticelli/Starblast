@@ -1032,9 +1032,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c418833e63d344f082d12af6c31e9539, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _size: {x: 100, y: 100}
-  _teleportFraction: 0.25
-  _camera: {fileID: 519420031}
+  _innerRadius: 100
+  _outerRadius: 120
 --- !u!114 &301635536
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1649,15 +1648,15 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.041260745
-    y: 0.041252866
-    width: 0.9169054
-    height: 0.91673034
+    x: 0.105444126
+    y: 0.5989305
+    width: 0.22922635
+    height: 0.22918259
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 10
   orthographic: 1
-  orthographic size: 6.25
+  orthographic size: 4.6875
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -2594,8 +2593,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3151c8a7e9147a08207d60cd40a6662, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialAsteroidCount: 100
-  minRadius: 2
+  initialAsteroidCount: 1500
 --- !u!1 &1076348588
 GameObject:
   m_ObjectHideFlags: 0
@@ -3002,7 +3000,7 @@ Transform:
   m_GameObject: {fileID: 1339426017}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.16751584}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3267,7 +3265,7 @@ MonoBehaviour:
     - {fileID: 1469234042465271285, guid: 1b9f2dbd1e3c5479597e3d117bd85582, type: 3}
     - {fileID: 8570354320790888649, guid: 80dc0908e02154489ad05f7b160df81c, type: 3}
     initialPoolSize: 10
-    maxPoolSize: 100
+    maxPoolSize: 10000
   - size: 1
     prefabs:
     - {fileID: 63636047174192856, guid: 96bcc205d22bc4966a9406c0948f5918, type: 3}
@@ -3275,19 +3273,19 @@ MonoBehaviour:
     - {fileID: 2695145965721348619, guid: f23597f3b63f0497f845eb1ae1ef571c, type: 3}
     - {fileID: 2695145965721348619, guid: ae4007fe07ca04b16aa1240077b3cd18, type: 3}
     initialPoolSize: 10
-    maxPoolSize: 100
+    maxPoolSize: 8000
   - size: 2
     prefabs:
     - {fileID: 63636047174192856, guid: 4fa4849d150464e89b15674bf37cb50b, type: 3}
     - {fileID: 63636047174192856, guid: 2b4d175cddbb54da6bd594a8229ead32, type: 3}
     initialPoolSize: 10
-    maxPoolSize: 100
+    maxPoolSize: 4000
   - size: 3
     prefabs:
     - {fileID: 63636047174192856, guid: a9f76a58a81404b2c881debfb96776da, type: 3}
     - {fileID: 63636047174192856, guid: a349e7fa5ed2a4228acaefb3490fd14e, type: 3}
     initialPoolSize: 10
-    maxPoolSize: 100
+    maxPoolSize: 2000
 --- !u!114 &1502323558
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -37,19 +37,6 @@ namespace Starblast.Entities.Asteroids
             rb.angularVelocity = randomRotation;
         }
         
-        private void LateUpdate()
-        {
-            var oldPosition = rb.transform.position;
-            var updatedPosition = _levelBounds.CalcLoopingPosition(oldPosition);
-            
-            if (oldPosition != updatedPosition)
-            {
-                Debug.Log("Asteroid "+ gameObject.name + " moved from " + oldPosition + " to " + updatedPosition);
-                rb.transform.position = updatedPosition;
-            }
-            
-        }
-        
         
     }
     
