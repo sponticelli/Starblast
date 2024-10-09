@@ -15,7 +15,7 @@ namespace Starblast.Environments
         
         public bool IsInitialized { get; private set;  }
         
-        private LevelBounds levelBounds;
+        private IBoundaryManager boundaryManager;
         private AsteroidFactory asteroidFactory;
         
         private IEnumerator Start()
@@ -26,7 +26,7 @@ namespace Starblast.Environments
         public void Initialize()
         {
             if (IsInitialized) return;
-            levelBounds = ServiceLocator.Main.Get<LevelBounds>();
+            boundaryManager = ServiceLocator.Main.Get<IBoundaryManager>();
             asteroidFactory = ServiceLocator.Main.Get<AsteroidFactory>();
             SpawnInitialAsteroids();
             IsInitialized = true;
@@ -43,8 +43,8 @@ namespace Starblast.Environments
         
         private Vector3 GetRandomSpawnPosition()
         {
-            var minRadius = levelBounds.InnerRadius / 2;
-            var maxRadius = levelBounds.InnerRadius;
+            var minRadius = boundaryManager.GetZoneRadius(ZoneType.SafeZone) / 2;
+            var maxRadius = boundaryManager.GetZoneRadius(ZoneType.SafeZone);
             
             var randomAngle = Random.Range(0, 360);
             var randomRadius = Random.Range(minRadius, maxRadius);

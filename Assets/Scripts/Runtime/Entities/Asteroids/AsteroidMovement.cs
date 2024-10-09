@@ -10,16 +10,6 @@ namespace Starblast.Entities.Asteroids
         private Rigidbody2D rb;
         private float speed;
         private float rotationSpeed;
-        private LevelBounds _levelBounds;
-
-        private void OnEnable()
-        {
-            if (ServiceLocator.Main.IsRegistered<LevelBounds>())
-            {
-                _levelBounds = ServiceLocator.Main.Get<LevelBounds>();
-            }
-        }
-
         
         public void Initialize(Rigidbody2D rigidbody,  float speed, float rotationSpeed)
         {

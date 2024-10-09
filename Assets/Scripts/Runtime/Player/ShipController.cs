@@ -30,12 +30,8 @@ namespace Starblast.Player
         
         public Rigidbody2D Rigidbody2D => _rigidbody2D;
         
-        public LevelBounds _levelBounds;
-        
         private void Awake()
         {
-            _levelBounds = ServiceLocator.Main.Get<LevelBounds>();
-            
             _propulsion.Initialize(_rigidbody2D, _propulsionData);
             _visuals.Initialize(_visualData);
             _weaponController.Initialize(_weaponData);
