@@ -1,7 +1,6 @@
-using System;
 using UnityEngine;
 
-namespace Starblast.Environments.Boundaries
+namespace Starblast.Meshes
 {
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
     public class CircleOutline : MonoBehaviour
