@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Starblast.Services
 {
     [DefaultExecutionOrder(ExecutionOrder.TransientServiceRegister)]
-    public abstract class ATransientServiceRegister<T> : MonoBehaviour where T : IInitializable
+    public abstract class ATransientServiceRegisterer<T> : MonoBehaviour where T : IInitializable
     {
         public virtual T Service { get; private set; }
         

@@ -9,17 +9,17 @@ namespace Starblast.Environments.Boundaries
             throw new System.NotImplementedException();
         }
 
-        public void ApplyWarningEffects()
+        public void OnEnterZone(ZoneType zone)
         {
             throw new System.NotImplementedException();
         }
 
-        public void ApplyDangerEffects()
+        public void OnExitZone(ZoneType zone)
         {
             throw new System.NotImplementedException();
         }
 
-        public void ApplyDeadEffects()
+        public void SetEffectIntensity(float intensity)
         {
             throw new System.NotImplementedException();
         }

@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Starblast.Environments
 {
     [DefaultExecutionOrder(ExecutionOrder.TransientServiceRegister)]
-    public class FXFactoryRegister : ATransientServiceRegister<FXFactory>
+    public class FXFactoryRegisterer : ATransientServiceRegisterer<FXFactory>
     {
         [SerializeField] private FXFactory _service;
         

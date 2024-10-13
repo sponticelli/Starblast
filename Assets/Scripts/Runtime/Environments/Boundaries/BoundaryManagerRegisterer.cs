@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Starblast.Environments.Boundaries
 {
     [DefaultExecutionOrder(ExecutionOrder.TransientServiceRegister)]
-    public class BoundaryManagerRegister : ATransientServiceRegister<IBoundaryManager>
+    public class BoundaryManagerRegisterer : ATransientServiceRegisterer<IBoundaryManager>
     {
         [SerializeField] private BoundaryManager _service;
         

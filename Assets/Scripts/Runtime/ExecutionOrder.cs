@@ -10,5 +10,6 @@ namespace Starblast
 
         public const int Services = -100;
         public const int PoolManager = Services + 1;
+        public const int RegisterToRuntimeSet = PoolManager + 1;
     }
 }

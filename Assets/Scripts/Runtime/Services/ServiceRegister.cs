@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Starblast.Services
 {
-    public abstract class AServiceRegister<T> : MonoBehaviour 
+    public abstract class AServiceRegisterer<T> : MonoBehaviour 
     {
         protected abstract T GetService();
         

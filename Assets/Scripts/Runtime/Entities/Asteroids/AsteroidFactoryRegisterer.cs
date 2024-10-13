@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Starblast.Entities.Asteroids
 {
     [DefaultExecutionOrder(ExecutionOrder.TransientServiceRegister)]
-    public class AsteroidFactoryRegister : ATransientServiceRegister<AsteroidFactory>
+    public class AsteroidFactoryRegisterer : ATransientServiceRegisterer<AsteroidFactory>
     {
         [SerializeField] private AsteroidFactory _service;
         

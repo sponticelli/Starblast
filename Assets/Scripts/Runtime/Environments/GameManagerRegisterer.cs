@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Starblast.Environments
 {
     [DefaultExecutionOrder(ExecutionOrder.TransientServiceRegister)]
-    public class GameManagerRegister : ATransientServiceRegister<GameManager>
+    public class GameManagerRegisterer : ATransientServiceRegisterer<GameManager>
     {
         [SerializeField] private GameManager _service;
         

@@ -9,17 +9,17 @@ namespace Starblast.Environments.Boundaries
             throw new System.NotImplementedException();
         }
 
-        public void PlayWarningAudio()
+        public void OnEnterZone(ZoneType zone)
         {
             throw new System.NotImplementedException();
         }
 
-        public void PlayDangerAudio()
+        public void OnExitZone(ZoneType zone)
         {
             throw new System.NotImplementedException();
         }
 
-        public void PlayDeadAudio()
+        public void SetEffectIntensity(float intensity)
         {
             throw new System.NotImplementedException();
         }

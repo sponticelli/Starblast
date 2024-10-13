@@ -57,37 +57,15 @@ namespace Starblast.Environments.Boundaries
         public float GetDistanceToZone(Vector3 position, ZoneType zoneType)
         {
             float distance = position.magnitude;
-            switch (zoneType)
-            {
-                case ZoneType.SafeZone:
-                    return  _safeZoneRadius - distance;
-                case ZoneType.WarningZone:
-                    return _warningZoneRadius - distance;
-                case ZoneType.DangerZone:
-                    return _dangerZoneRadius - distance;
-                case ZoneType.DeadZone:
-                    return _deadZoneRadius - distance;
-                default:
-                    return 0f;
-            }
+            float radius = GetZoneRadius(zoneType);
+            return radius - distance;
         }
 
-        public float GetNormalizedDistanceToZone(Vector3 position, ZoneType zoneType)
+        public float NormalizedPositionInZone(Vector3 position, ZoneType zoneType)
         {
             float distance = position.magnitude;
-            switch (zoneType)
-            {
-                case ZoneType.SafeZone:
-                    return distance / _safeZoneRadius;
-                case ZoneType.WarningZone:
-                    return distance / _warningZoneRadius;
-                case ZoneType.DangerZone:
-                    return distance / _dangerZoneRadius;
-                case ZoneType.DeadZone:
-                    return distance / _deadZoneRadius;
-                default:
-                    return 0f;
-            }
+            float innerRadius = zoneType == ZoneType.SafeZone ? 0f :  GetZoneRadius(zoneType - 1);
+            return (distance - innerRadius) / (GetZoneRadius(zoneType) - innerRadius);
         }
         
         private void OnDrawGizmos()
