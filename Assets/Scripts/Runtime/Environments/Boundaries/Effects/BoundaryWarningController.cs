@@ -22,47 +22,49 @@ namespace Starblast.Environments.Boundaries
 
 
         private IBoundaryManager _boundaryManager;
-        private PlayerRuntimeSet _playerRuntimeSet;
+        private GameObjectRegistry _gameObjectRegistry;
         private ShipController _player;
 
         private void Start()
         {
             _boundaryManager = ServiceLocator.Main.Get<IBoundaryManager>();
-            _playerRuntimeSet = ServiceLocator.Main.Get<PlayerRuntimeSet>();
-            _playerRuntimeSet.OnItemRegistered += OnPlayerAdded;
-            _playerRuntimeSet.OnItemUnregistered += OnPlayerRemoved;
-            _player = _playerRuntimeSet.GetPlayer();
+            _gameObjectRegistry = ServiceLocator.Main.Get<GameObjectRegistry>();
+            _gameObjectRegistry.OnRegistered += OnPlayerAdded;
+            _gameObjectRegistry.OnDeRegistered += OnPlayerRemoved;
+            _player = _gameObjectRegistry.Get<ShipController>();
             Initialize();
         }
 
         private void OnEnable()
         {
-            if (_playerRuntimeSet != null)
+            if (_gameObjectRegistry != null)
             {
-                _playerRuntimeSet.OnItemRegistered -= OnPlayerAdded;
-                _playerRuntimeSet.OnItemUnregistered -= OnPlayerRemoved;
-                _playerRuntimeSet.OnItemRegistered += OnPlayerAdded;
-                _playerRuntimeSet.OnItemUnregistered += OnPlayerRemoved;
+                _gameObjectRegistry.OnRegistered -= OnPlayerAdded;
+                _gameObjectRegistry.OnDeRegistered -= OnPlayerRemoved;
+                _gameObjectRegistry.OnRegistered += OnPlayerAdded;
+                _gameObjectRegistry.OnDeRegistered += OnPlayerRemoved;
             }
         }
 
         private void OnDisable()
         {
-            if (_playerRuntimeSet != null)
+            if (_gameObjectRegistry != null)
             {
-                _playerRuntimeSet.OnItemRegistered -= OnPlayerAdded;
-                _playerRuntimeSet.OnItemUnregistered -= OnPlayerRemoved;
+                _gameObjectRegistry.OnRegistered -= OnPlayerAdded;
+                _gameObjectRegistry.OnDeRegistered -= OnPlayerRemoved;
             }
         }
 
-        private void OnPlayerRemoved(ShipController player)
+        private void OnPlayerRemoved(Type type, MonoBehaviour monoBehaviour)
         {
-            _player = null;
+            if (type == typeof(ShipController))
+                _player = null;
         }
 
-        private void OnPlayerAdded(ShipController player)
+        private void OnPlayerAdded(Type type, MonoBehaviour monoBehaviour)
         {
-            _player = player;
+            if (type == typeof(ShipController))
+                _player = monoBehaviour as ShipController;
         }
 
 

@@ -4,7 +4,7 @@ using Starblast.Environments.Boundaries;
 using Starblast.Services;
 using UnityEngine;
 
-namespace Starblast.Environments
+namespace Starblast.Managers
 {
     [DefaultExecutionOrder(ExecutionOrder.Services)]
     public class GameManager : MonoBehaviour, IInitializable

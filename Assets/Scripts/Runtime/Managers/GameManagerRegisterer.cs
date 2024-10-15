@@ -1,7 +1,7 @@
 using Starblast.Services;
 using UnityEngine;
 
-namespace Starblast.Environments
+namespace Starblast.Managers
 {
     [DefaultExecutionOrder(ExecutionOrder.TransientServiceRegister)]
     public class GameManagerRegisterer : ATransientServiceRegisterer<GameManager>

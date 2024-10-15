@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Star 2 Material
+  m_Name: StarfieldMaterial
   m_Shader: {fileID: -6465566751694194690, guid: a95e394e451234497afa876d2a764b03, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -66,10 +66,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Density: 4
+    - _Density: 15
     - _EnableExternalAlpha: 0
     - _Size: 0.1
-    - _Speed: 0.1
+    - _Speed: 0.025
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
