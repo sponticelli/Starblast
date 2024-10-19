@@ -14,6 +14,10 @@ namespace Starblast.Extensions
             return Mathf.Max(0, Mathf.Min(1, value));
         }
         
+        public static float Normalize(this float value,  float min = 0, float max = 1f) 
+            => (value - min) / (max - min);
+
+        
         public static float NormalizeAngle(this float ang)
         {
             ang = (ang + 180) % 360;

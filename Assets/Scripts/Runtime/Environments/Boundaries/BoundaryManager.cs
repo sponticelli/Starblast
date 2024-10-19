@@ -1,3 +1,4 @@
+using Starblast.Extensions;
 using UnityEngine;
 
 namespace Starblast.Environments.Boundaries
@@ -56,14 +57,14 @@ namespace Starblast.Environments.Boundaries
 
         public float GetDistanceToZone(Vector3 position, ZoneType zoneType)
         {
-            float distance = position.magnitude;
+            float distance = position.Magnitude2D();
             float radius = GetZoneRadius(zoneType);
             return radius - distance;
         }
 
         public float NormalizedPositionInZone(Vector3 position, ZoneType zoneType)
         {
-            float distance = position.magnitude;
+            float distance = position.Magnitude2D();
             float innerRadius = zoneType == ZoneType.SafeZone ? 0f :  GetZoneRadius(zoneType - 1);
             return (distance - innerRadius) / (GetZoneRadius(zoneType) - innerRadius);
         }
