@@ -2,13 +2,15 @@ using UnityEngine;
 
 namespace Starblast.Tentacles
 {
-    public class TentacleCollider
+    public partial class Tentacle
     {
-        public void BuildCollider(PolygonCollider2D polygonCollider, Vector2[] vertices, int reduction,
-            Transform tipTransform, int pivotCapSmoothness, int smoothness, int tipCapSmoothness)
+        private PolygonCollider2D polygonCollider;
+
+        private void BuildCollider()
         {
             if (!polygonCollider.enabled || vertices == null) return; // TODO: fix update vs fixedupdate
 
+            var tipTransform = Tip.transform;
             if (reduction == 0)
             {
                 var colliderPoints = new Vector2[vertices.Length];

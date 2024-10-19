@@ -72,7 +72,7 @@ namespace Starblast.Tentacles
         {
             header = new GUIStyle();
             header.normal.textColor = Color.white;
-            header.alignment = TextAnchor.MiddleCenter;
+            header.alignment = TextAnchor.MiddleLeft;
             header.fontStyle = FontStyle.Bold;
         }
     }
