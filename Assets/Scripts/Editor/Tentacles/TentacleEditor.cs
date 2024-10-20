@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Starblast.Tentacles
 {
-    [CustomEditor(typeof(Tentacle)), CanEditMultipleObjects]
+    [CustomEditor(typeof(Entities.Tentacles.Tentacle)), CanEditMultipleObjects]
     public class TentacleEditor : Editor
     {
         private TentacleProperties _properties;

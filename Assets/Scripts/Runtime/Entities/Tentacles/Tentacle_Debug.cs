@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Starblast.Tentacles
+namespace Starblast.Entities.Tentacles
 {
     public partial class Tentacle
     {

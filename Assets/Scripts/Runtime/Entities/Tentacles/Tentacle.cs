@@ -1,7 +1,6 @@
-using Starblast.Extensions;
 using UnityEngine;
 
-namespace Starblast.Tentacles
+namespace Starblast.Entities.Tentacles
 {
     [ExecuteInEditMode]
     public partial class Tentacle : MonoBehaviour

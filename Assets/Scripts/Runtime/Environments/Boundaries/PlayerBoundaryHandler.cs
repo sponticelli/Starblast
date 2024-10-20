@@ -13,8 +13,8 @@ namespace Starblast.Environments.Boundaries
         
         private IBoundaryManager _boundaryManager;
         
-        private ShipController _player;
-        private GameObjectRegistry _gameObjectRegistry;
+        private PlayerController _player;
+
         
         private ZoneType _currentZoneType;
         private bool _playerExists;
@@ -25,35 +25,6 @@ namespace Starblast.Environments.Boundaries
             _visualEffectController = GetComponentInChildren<IBoundaryVisualEffectController>();
             _audioEffectController = GetComponentInChildren<IBoundaryAudioEffectController>();
             _warningController = GetComponentInChildren<IBoundaryWarningController>();
-            
-            _gameObjectRegistry = ServiceLocator.Main.Get<GameObjectRegistry>();
-            _gameObjectRegistry.OnRegistered += OnPlayerAdded;
-            _gameObjectRegistry.OnDeRegistered += OnPlayerRemoved;
-            _player = _gameObjectRegistry.Get<ShipController>();
-            _playerExists = _player != null;
-            Debug.Log($"[PlayerBoundaryHandler] Player exists: {_playerExists}");
-        }
-        
-        private void OnEnable()
-        {
-           if (_gameObjectRegistry != null)
-           {
-               _gameObjectRegistry.OnRegistered -= OnPlayerAdded;
-                _gameObjectRegistry.OnDeRegistered -= OnPlayerRemoved;
-               _gameObjectRegistry.OnRegistered += OnPlayerAdded;
-                _gameObjectRegistry.OnDeRegistered += OnPlayerRemoved;
-               _player = _gameObjectRegistry.Get<ShipController>();
-                _playerExists = _player != null;
-           }
-        }
-        
-        private void OnDisable()
-        {
-            if (_gameObjectRegistry != null)
-            {
-                _gameObjectRegistry.OnRegistered -= OnPlayerAdded;
-                _gameObjectRegistry.OnDeRegistered -= OnPlayerRemoved;
-            }
         }
         
         private void Update()
@@ -97,26 +68,17 @@ namespace Starblast.Environments.Boundaries
             
         }
         
-        private void OnPlayerAdded(Type type, MonoBehaviour monoBehaviour)
+        public void OnPlayerAdded(PlayerController player)
         {
-            if (type != typeof(ShipController))
-            {
-                return;
-            }
-            _player = (ShipController)monoBehaviour;
+            _player = player;
             _playerExists = true;
-            Debug.Log($"[PlayerBoundaryHandler] Player exists: {_playerExists}");
         }
+
         
-        private void OnPlayerRemoved(Type type, MonoBehaviour monoBehaviour)
+        public void OnPlayerRemoved(PlayerController player)
         {
-            if (type != typeof(ShipController))
-            {
-                return;
-            }
             _player = null;
             _playerExists = false;
-            Debug.Log($"[PlayerBoundaryHandler] Player exists: {_playerExists}");
         }
         
         

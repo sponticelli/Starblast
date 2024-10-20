@@ -35,7 +35,7 @@ namespace Starblast.Tentacles
         {
             tentacleData = new TentacleData[targets.Length];
             for (int i = 0; i < targets.Length; i++)
-                tentacleData[i] = new TentacleData((Tentacle)targets[i]);
+                tentacleData[i] = new TentacleData((Entities.Tentacles.Tentacle)targets[i]);
         }
 
         private void Initialize(SerializedObject serializedObject)

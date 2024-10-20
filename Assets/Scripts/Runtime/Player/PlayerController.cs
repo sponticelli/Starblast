@@ -9,7 +9,7 @@ using UnityEngine;
 namespace Starblast.Player
 {
     [AddComponentMenu("Starblast/Player/Ship Controller")]
-    public class ShipController : MonoBehaviour
+    public class PlayerController : MonoBehaviour
     {
         [Header("References")]
         [SerializeField] private Rigidbody2D _rigidbody2D;

@@ -224,9 +224,9 @@ MonoBehaviour:
   color: {r: 0.085, g: 0.085, b: 0.085, a: 1}
   material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   textureType: 0
-  smoothness: 18
+  smoothness: 16
   pivotCapSmoothness: 0
-  tipCapSmoothness: 4
+  tipCapSmoothness: 2
   width: 0.5
   shape:
     serializedVersion: 2
@@ -241,17 +241,17 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0.5275325
     - serializedVersion: 3
-      time: 0.43810415
-      value: 0.75976056
-      inSlope: -0.65959615
-      outSlope: -0.65959615
+      time: 0.38921803
+      value: 0.8930899
+      inSlope: -0.7378838
+      outSlope: -0.7378838
       tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 1.0666809
-      value: 0.27523422
+      time: 1.1244594
+      value: 0.01
       inSlope: -1.0255988
       outSlope: -1.0255988
       tangentMode: 0
@@ -261,17 +261,17 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  reduction: 2
-  animation: 1
+  reduction: 4
+  animation: 2
+  debugOutline: 0
+  debugTriangles: 1
+  debugUVs: 0
   target: {fileID: 0}
   targetRigidbody: {fileID: 0}
   speed: 7000
   frequency: 2
   amplitude: 200
   animationDelay: 0
-  debugOutline: 1
-  debugTriangles: 1
-  debugUVs: 1
 --- !u!1 &886046388212916480
 GameObject:
   m_ObjectHideFlags: 0
@@ -302,7 +302,7 @@ Transform:
   m_GameObject: {fileID: 886046388212916480}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 8, z: 0}
+  m_LocalPosition: {x: 0, y: 10, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -353,9 +353,9 @@ SpringJoint2D:
   m_Anchor: {x: 0, y: 0}
   m_ConnectedAnchor: {x: 0, y: 0}
   m_AutoConfigureDistance: 0
-  m_Distance: 2.6666667
+  m_Distance: 3.3333333
   m_DampingRatio: 0.2
-  m_Frequency: 2.02
+  m_Frequency: 5
 --- !u!233 &414975469832941404
 HingeJoint2D:
   m_ObjectHideFlags: 0
@@ -415,7 +415,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.21512982
+  m_Radius: 0.14131775
 --- !u!60 &3697240494893038558
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -460,23 +460,16 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: -0.5, y: -8}
-      - {x: -0.47190034, y: -6.588235}
-      - {x: -0.41657197, y: -5.17647}
-      - {x: -0.35952258, y: -3.7647057}
-      - {x: -0.30367422, y: -2.352941}
-      - {x: -0.24233389, y: -0.9411764}
-      - {x: -0.1958977, y: 0}
-      - {x: -0.15848458, y: 0.11514568}
-      - {x: -0.06053579, y: 0.18630981}
-      - {x: 0.15848458, y: 0.11514568}
-      - {x: 0.1958977, y: 0}
-      - {x: 0.26370227, y: -1.4117646}
-      - {x: 0.3226514, y: -2.8235292}
-      - {x: 0.37779033, y: -4.2352943}
-      - {x: 0.43638492, y: -5.6470585}
-      - {x: 0.48561633, y: -7.0588236}
-      - {x: 0.5, y: -8}
+    - - {x: -0.5, y: -10}
+      - {x: -0.4697988, y: -8.888889}
+      - {x: -0.32564008, y: -5.5555553}
+      - {x: -0.058182716, y: 0.10077572}
+      - {x: 0.058182716, y: 0.10077572}
+      - {x: 0.11636555, y: 0}
+      - {x: 0.32564008, y: -5.5555553}
+      - {x: 0.46979856, y: -8.888888}
+      - {x: 0.5, y: -10}
+      - {x: 0, y: 0}
   m_UseDelaunayMesh: 0
 --- !u!1 &1456445371841431929
 GameObject:
@@ -506,7 +499,7 @@ Transform:
   m_GameObject: {fileID: 1456445371841431929}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 5.3333335, z: 0}
+  m_LocalPosition: {x: 0, y: 6.6666665, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -557,9 +550,9 @@ SpringJoint2D:
   m_Anchor: {x: 0, y: 0}
   m_ConnectedAnchor: {x: 0, y: 0}
   m_AutoConfigureDistance: 0
-  m_Distance: 2.6666667
+  m_Distance: 3.3333333
   m_DampingRatio: 0.2
-  m_Frequency: 2.02
+  m_Frequency: 5
 --- !u!58 &8200221587191751355
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -594,7 +587,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.32638997
+  m_Radius: 0.34101823
 --- !u!1 &7369284949113017223
 GameObject:
   m_ObjectHideFlags: 0
@@ -623,7 +616,7 @@ Transform:
   m_GameObject: {fileID: 7369284949113017223}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.6666667, z: 0}
+  m_LocalPosition: {x: 0, y: 3.3333333, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -674,9 +667,9 @@ SpringJoint2D:
   m_Anchor: {x: 0, y: 0}
   m_ConnectedAnchor: {x: 0, y: 0}
   m_AutoConfigureDistance: 0
-  m_Distance: 2.6666667
+  m_Distance: 3.3333333
   m_DampingRatio: 0.2
-  m_Frequency: 2.02
+  m_Frequency: 5
 --- !u!58 &8003714460825624542
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -711,4 +704,4 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.4285289
+  m_Radius: 0.47271425

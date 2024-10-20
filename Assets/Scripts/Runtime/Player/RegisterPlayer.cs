@@ -6,7 +6,7 @@ namespace Starblast.Player
     [DefaultExecutionOrder(ExecutionOrder.RegisterToRuntimeSet)]
     public class RegisterPlayer : MonoBehaviour
     {
-        [SerializeField] private ShipController _player;
+        [SerializeField] private PlayerController _player;
 
         private void Start()
         {

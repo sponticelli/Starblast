@@ -1,4 +1,4 @@
-namespace Starblast.Tentacles
+namespace Starblast.Entities.Tentacles
 {
     public enum UVsLayout
     {

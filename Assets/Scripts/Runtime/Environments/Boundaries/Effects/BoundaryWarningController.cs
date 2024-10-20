@@ -17,54 +17,27 @@ namespace Starblast.Environments.Boundaries
         }
 
 
-        [Header("References")] [SerializeField]
-        private BoundaryText[] _boundaryTexts;
+        [Header("References")] 
+        [SerializeField] private BoundaryText[] _boundaryTexts;
 
 
         private IBoundaryManager _boundaryManager;
-        private GameObjectRegistry _gameObjectRegistry;
-        private ShipController _player;
+        private PlayerController _player;
 
         private void Start()
         {
-            _boundaryManager = ServiceLocator.Main.Get<IBoundaryManager>();
-            _gameObjectRegistry = ServiceLocator.Main.Get<GameObjectRegistry>();
-            _gameObjectRegistry.OnRegistered += OnPlayerAdded;
-            _gameObjectRegistry.OnDeRegistered += OnPlayerRemoved;
-            _player = _gameObjectRegistry.Get<ShipController>();
             Initialize();
         }
 
-        private void OnEnable()
+        
+        public void OnPlayerRemoved(PlayerController player)
         {
-            if (_gameObjectRegistry != null)
-            {
-                _gameObjectRegistry.OnRegistered -= OnPlayerAdded;
-                _gameObjectRegistry.OnDeRegistered -= OnPlayerRemoved;
-                _gameObjectRegistry.OnRegistered += OnPlayerAdded;
-                _gameObjectRegistry.OnDeRegistered += OnPlayerRemoved;
-            }
+            _player = null;
         }
 
-        private void OnDisable()
+        public void OnPlayerAdded(PlayerController player)
         {
-            if (_gameObjectRegistry != null)
-            {
-                _gameObjectRegistry.OnRegistered -= OnPlayerAdded;
-                _gameObjectRegistry.OnDeRegistered -= OnPlayerRemoved;
-            }
-        }
-
-        private void OnPlayerRemoved(Type type, MonoBehaviour monoBehaviour)
-        {
-            if (type == typeof(ShipController))
-                _player = null;
-        }
-
-        private void OnPlayerAdded(Type type, MonoBehaviour monoBehaviour)
-        {
-            if (type == typeof(ShipController))
-                _player = monoBehaviour as ShipController;
+            _player = player;
         }
 
 

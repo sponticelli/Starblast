@@ -6,7 +6,7 @@ namespace Starblast.Tentacles
 {
     public struct TentacleData
     {
-        public Tentacle Tentacle { get; private set; }
+        public Entities.Tentacles.Tentacle Tentacle { get; private set; }
 
         public MeshRenderer meshRenderer;
         private PolygonCollider2D polygonCollider;
@@ -55,7 +55,7 @@ namespace Starblast.Tentacles
         public Rigidbody2D ParentBody { get; private set; }
         public Vector2 ParentBodyOffset { get; private set; }
 
-        public TentacleData(Tentacle tentacle)
+        public TentacleData(Entities.Tentacles.Tentacle tentacle)
         {
             Tentacle = tentacle;
             var transform = tentacle.transform;

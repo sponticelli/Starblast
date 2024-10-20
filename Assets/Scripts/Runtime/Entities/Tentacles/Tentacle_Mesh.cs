@@ -1,7 +1,7 @@
 using Starblast.Extensions;
 using UnityEngine;
 
-namespace Starblast.Tentacles
+namespace Starblast.Entities.Tentacles
 {
     public partial class Tentacle
     {
@@ -51,7 +51,7 @@ namespace Starblast.Tentacles
 
             UpdateUVs(out float segmentStep);
 
-            points[0] = Pivot.position.GetCubicBezierPoint(Segments[0].position, Segments[1].position, Tip.position, 0);
+            points[0] = Vector2Extensions.GetCubicBezierPoint(Pivot.position, Segments[0].position, Segments[1].position, Tip.position, 0);
 
             CalculateVerticesPositions(segmentStep);
             CalculateTipCapVertices(segmentStep);
@@ -75,7 +75,7 @@ namespace Starblast.Tentacles
 
             for (int i = 1; i < smoothness; i++)
             {
-                points[i] = Pivot.position.GetCubicBezierPoint(Segments[0].position, Segments[1].position, Tip.position,
+                points[i] = Vector2Extensions.GetCubicBezierPoint(Pivot.position, Segments[0].position, Segments[1].position, Tip.position,
                     i / (smoothness - 1f));
                 var curve = shape.Evaluate(((float)i).Normalize(0, smoothness));
 

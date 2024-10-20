@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Starblast.Tentacles
+namespace Starblast.Entities.Tentacles
 {
     public partial class Tentacle
     {
@@ -12,41 +12,17 @@ namespace Starblast.Tentacles
         /// </summary>
         public float Mass
         {
-            get
-            {
-                float mass = Pivot.mass + Tip.mass;
-                for (int i = 0; i < Segments.Length; i++)
-                {
-                    mass += Segments[i].mass;
-                }
-
-                return mass;
-            }
-            set
-            {
-                float segmentMass = value / (Segments.Length + 2);
-                Pivot.mass = Tip.mass = segmentMass;
-                for (int i = 0; i < Segments.Length; i++)
-                {
-                    Segments[i].mass = segmentMass;
-                }
-            }
+            get => Pivot.mass + Tip.mass + TotalSegmentMass;
+            set => SetSegmentMass(value / (Segments.Length + 2));
         }
 
         /// <summary>
-        /// The drag of an each segment of this tentacle
+        /// The drag of each segment of this tentacle
         /// </summary>
         public float Drag
         {
             get => Pivot.drag;
-            set
-            {
-                Pivot.drag = Tip.drag = value;
-                for (int i = 0; i < Segments.Length; i++)
-                {
-                    Segments[i].drag = value;
-                }
-            }
+            set => SetSegmentProperty(segment => segment.drag = value);
         }
 
         /// <summary>
@@ -55,29 +31,16 @@ namespace Starblast.Tentacles
         public float Gravity
         {
             get => Pivot.gravityScale;
-            set
-            {
-                Pivot.gravityScale = Tip.gravityScale = value;
-                for (int i = 0; i < Segments.Length; i++)
-                {
-                    Segments[i].gravityScale = value;
-                }
-            }
+            set => SetSegmentProperty(segment => segment.gravityScale = value);
         }
 
         /// <summary>
-        /// The stiffness of an each segment of this tentacle
+        /// The stiffness of each segment of this tentacle
         /// </summary>
         public float Stiffness
         {
             get => Joints[0].frequency;
-            set
-            {
-                for (int i = 0; i < Joints.Length; i++)
-                {
-                    Joints[i].frequency = value;
-                }
-            }
+            set => SetJointProperty(joint => joint.frequency = value);
         }
 
         /// <summary>
@@ -91,7 +54,7 @@ namespace Starblast.Tentacles
         public Rigidbody2D Pivot { get; private set; }
 
         /// <summary>
-        /// Rigidbodies2D on the segments beween tip and pivot
+        /// Rigidbodies2D on the segments between tip and pivot
         /// </summary>
         public Rigidbody2D[] Segments { get; private set; }
 
@@ -100,14 +63,26 @@ namespace Starblast.Tentacles
         /// </summary>
         public SpringJoint2D[] Joints { get; private set; }
 
+        private float TotalSegmentMass
+        {
+            get
+            {
+                float totalMass = 0;
+                foreach (var segment in Segments)
+                {
+                    totalMass += segment.mass;
+                }
+                return totalMass;
+            }
+        }
+
         private void InitializeJoints()
         {
-            Joints = new SpringJoint2D[1 + Segments.Length];
+            Joints = new SpringJoint2D[Segments.Length + 1];
             for (int i = 0; i < Segments.Length; i++)
             {
                 Joints[i] = Segments[i].GetComponent<SpringJoint2D>();
             }
-
             Joints[^1] = Tip.GetComponent<SpringJoint2D>();
 
             pivotHingeJoint = Pivot.GetComponent<HingeJoint2D>();
@@ -117,12 +92,39 @@ namespace Starblast.Tentacles
         private void InitializeSegments()
         {
             Segments = new Rigidbody2D[2];
-            for (int i = 0; i < Segments.Length;)
+            for (int i = 0; i < Segments.Length; i++)
             {
-                Segments[i++] = transform.GetChild(i).GetComponent<Rigidbody2D>();
+                Segments[i] = transform.GetChild(i).GetComponent<Rigidbody2D>();
             }
 
             Tip = transform.GetChild(3).GetComponent<Rigidbody2D>();
+        }
+
+        private void SetSegmentMass(float mass)
+        {
+            Pivot.mass = Tip.mass = mass;
+            foreach (var segment in Segments)
+            {
+                segment.mass = mass;
+            }
+        }
+
+        private void SetSegmentProperty(System.Action<Rigidbody2D> setPropertyAction)
+        {
+            setPropertyAction(Pivot);
+            setPropertyAction(Tip);
+            foreach (var segment in Segments)
+            {
+                setPropertyAction(segment);
+            }
+        }
+
+        private void SetJointProperty(System.Action<SpringJoint2D> setPropertyAction)
+        {
+            foreach (var joint in Joints)
+            {
+                setPropertyAction(joint);
+            }
         }
     }
 }
