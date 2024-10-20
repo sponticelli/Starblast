@@ -6,24 +6,25 @@ namespace Starblast.Tentacles
 {
     public class TentacleProperties
     {
-        public SerializedProperty material,
-            color,
-            textureType,
-            smoothness,
-            pivotCapSmoothness,
-            tipCapSmoothness,
-            width,
-            shape,
-            reduction,
-            tentacleTarget,
-            tentacleTargetRigidbody,
-            speed,
-            animation,
-            frequency,
-            amplitude,
-            animationDelay;
-        
+        public SerializedProperty material;
+        public SerializedProperty color;
+        public SerializedProperty textureType;
+        public SerializedProperty smoothness;
+        public SerializedProperty pivotCapSmoothness;
+        public SerializedProperty tipCapSmoothness;
+        public SerializedProperty width;
+        public SerializedProperty shape;
+        public SerializedProperty reduction;
+        public SerializedProperty tentacleTarget;
+        public SerializedProperty tentacleTargetRigidbody;
+        public SerializedProperty speed;
+        public SerializedProperty animation;
+        public SerializedProperty frequency;
+        public SerializedProperty amplitude;
+        public SerializedProperty animationDelay;
+
         public TentacleData[] tentacleData;
+
         public TentacleProperties(SerializedObject serializedObject, Object[] targets)
         {
             Initialize(serializedObject);
@@ -56,20 +57,26 @@ namespace Starblast.Tentacles
             amplitude = serializedObject.FindProperty("amplitude");
             animationDelay = serializedObject.FindProperty("animationDelay");
         }
-        
+
         public bool IsPropertyModified(Type type, string property)
         {
-            if (EditorApplication.isPlaying) return false;
+            if (EditorApplication.isPlaying)
+            {
+                return false;
+            }
+
             if (tentacleData.Length == 1)
             {
                 var modifications = PrefabUtility.GetPropertyModifications(tentacleData[0].Tentacle);
-                if (modifications != null)
-                    for (int j = 0; j < modifications.Length; j++)
+                if (modifications == null) return false;
+                for (int j = 0; j < modifications.Length; j++)
+                {
+                    var modification = modifications[j];
+                    if (modification.target.GetType() == type && modification.propertyPath == $"m_{property}")
                     {
-                        var modification = modifications[j];
-                        if (modification.target.GetType() == type && modification.propertyPath == $"m_{property}")
-                            return true;
+                        return true;
                     }
+                }
             }
 
             return false;

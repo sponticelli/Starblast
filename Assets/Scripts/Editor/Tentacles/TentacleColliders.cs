@@ -28,36 +28,54 @@ namespace Starblast.Tentacles
             var haveDifferentValues = false;
             var currentType = _properties.tentacleData[0].CurrentColliderType;
             if (currentType == (TentacleData.ColliderType)(-1))
+            {
                 haveDifferentValues = true;
+            }
             else
+            {
                 for (int i = 1; i < _properties.tentacleData.Length; i++)
+                {
                     if (currentType != _properties.tentacleData[i].CurrentColliderType)
                     {
                         haveDifferentValues = true;
                         break;
                     }
+                }
+            }
 
-            if (haveDifferentValues) EditorGUI.showMixedValue = true;
+            if (haveDifferentValues)
+            {
+                EditorGUI.showMixedValue = true;
+            }
 
             EditorGUI.BeginChangeCheck();
 
             TentacleData.ColliderType value;
             if (_properties.IsPropertyModified(typeof(CircleCollider2D), "Enabled"))
             {
-                TentacleEditorUtil.BeginBoldLabels();
+                EditorUtil.BeginBoldLabels();
                 value = (TentacleData.ColliderType)EditorGUILayout.EnumPopup(
                     new GUIContent("Collider", "Type of the collider the tentacle will use."), currentType);
-                TentacleEditorUtil.EndBoldLabels();
+                EditorUtil.EndBoldLabels();
             }
             else
+            {
                 value = (TentacleData.ColliderType)EditorGUILayout.EnumPopup(
                     new GUIContent("Collider", "Type of the collider the tentacle will use."), currentType);
+            }
 
             if (EditorGUI.EndChangeCheck())
+            {
                 for (int i = 0; i < _properties.tentacleData.Length; i++)
+                {
                     _properties.tentacleData[i].SetCollider(value);
+                }
+            }
 
-            if (haveDifferentValues) EditorGUI.showMixedValue = false;
+            if (haveDifferentValues)
+            {
+                EditorGUI.showMixedValue = false;
+            }
         }
 
         private bool DrawIsTrigger()
@@ -65,14 +83,20 @@ namespace Starblast.Tentacles
             var haveDifferentValues = false;
             var isTrigger = _properties.tentacleData[0].IsTrigger;
             if (isTrigger.Item2)
+            {
                 haveDifferentValues = true;
+            }
             else
+            {
                 for (int i = 1; i < _properties.tentacleData.Length; i++)
+                {
                     if (isTrigger.Item1 != _properties.tentacleData[i].IsTrigger.Item1)
                     {
                         haveDifferentValues = true;
                         break;
                     }
+                }
+            }
 
             if (haveDifferentValues) EditorGUI.showMixedValue = true;
 
@@ -81,22 +105,29 @@ namespace Starblast.Tentacles
             bool value;
             if (_properties.IsPropertyModified(typeof(CircleCollider2D), "IsTrigger"))
             {
-                TentacleEditorUtil.BeginBoldLabels();
+                EditorUtil.BeginBoldLabels();
                 value = EditorGUILayout.Toggle(
                     new GUIContent("Is Trigger", "Whether the collider behaves as a trigger or not."), isTrigger.Item1);
-                TentacleEditorUtil.EndBoldLabels();
+                EditorUtil.EndBoldLabels();
             }
             else
+            {
                 value = EditorGUILayout.Toggle(
                     new GUIContent("Is Trigger", "Whether the collider behaves as a trigger or not."), isTrigger.Item1);
+            }
 
             if (EditorGUI.EndChangeCheck())
+            {
                 for (int i = 0; i < _properties.tentacleData.Length; i++)
                 {
                     _properties.tentacleData[i].SetTrigger(value);
                 }
+            }
 
-            if (haveDifferentValues) EditorGUI.showMixedValue = false;
+            if (haveDifferentValues)
+            {
+                EditorGUI.showMixedValue = false;
+            }
 
             return value;
         }
@@ -106,33 +137,44 @@ namespace Starblast.Tentacles
             var haveDifferentValues = false;
             var isPolygonalEnabled = _properties.tentacleData[0].PolygonalEnabled;
             for (int i = 1; i < _properties.tentacleData.Length; i++)
+            {
                 if (isPolygonalEnabled != _properties.tentacleData[i].PolygonalEnabled)
                 {
                     haveDifferentValues = true;
                     break;
                 }
+            }
 
-            if (haveDifferentValues) EditorGUI.showMixedValue = true;
+            if (haveDifferentValues)
+            {
+                EditorGUI.showMixedValue = true;
+            }
 
             EditorGUI.BeginChangeCheck();
 
             bool value;
             if (_properties.IsPropertyModified(typeof(PolygonCollider2D), "Enabled"))
             {
-                TentacleEditorUtil.BeginBoldLabels();
+                EditorUtil.BeginBoldLabels();
                 value = EditorGUILayout.Toggle(
                     new GUIContent("Polygonal Collider", "Whether the polygonal collider enabled or not."),
                     isPolygonalEnabled);
-                TentacleEditorUtil.EndBoldLabels();
+                EditorUtil.EndBoldLabels();
             }
             else
+            {
                 value = EditorGUILayout.Toggle(
                     new GUIContent("Polygonal Collider", "Whether the polygonal collider enabled or not."),
                     isPolygonalEnabled);
+            }
 
             if (EditorGUI.EndChangeCheck())
+            {
                 for (int i = 0; i < _properties.tentacleData.Length; i++)
+                {
                     _properties.tentacleData[i].PolygonalEnabled = value;
+                }
+            }
 
             if (haveDifferentValues) EditorGUI.showMixedValue = false;
 

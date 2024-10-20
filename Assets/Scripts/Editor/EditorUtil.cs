@@ -1,9 +1,9 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Starblast.Tentacles
+namespace Starblast
 {
-    public static class TentacleEditorUtil
+    public static class EditorUtil
     {
         public static void BeginBoldLabels()
         {
