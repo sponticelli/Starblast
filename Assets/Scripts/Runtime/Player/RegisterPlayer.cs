@@ -4,14 +4,8 @@ using UnityEngine;
 namespace Starblast.Player
 {
     [DefaultExecutionOrder(ExecutionOrder.RegisterToRuntimeSet)]
-    public class RegisterPlayer : MonoBehaviour
+    public class RegisterPlayer : GameObjectRegister<PlayerController>
     {
-        [SerializeField] private PlayerController _player;
 
-        private void Start()
-        {
-            GameObjectRegistry registry = ServiceLocator.Main.Get<GameObjectRegistry>();
-            registry.Register(_player);
-        }
     }
 }

@@ -1,6 +1,6 @@
-using Starblast.Player;
+using Starblast.Entities;
 
-namespace Starblast.Entities
+namespace Starblast.Player
 {
     public class PlayerReference : GameObjectReference<PlayerController>
     {
