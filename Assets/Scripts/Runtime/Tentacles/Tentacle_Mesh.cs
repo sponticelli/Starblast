@@ -8,6 +8,7 @@ namespace Starblast.Tentacles
         private MeshFilter meshFilter;
         private MeshRenderer meshRenderer;
         private Vector2[] vertices;
+        private Vector2[] points;
         private Vector2[] uvs;
         private Mesh mesh;
         private MaterialPropertyBlock materialBlock;
@@ -17,6 +18,10 @@ namespace Starblast.Tentacles
         private int VerticesCount => smoothness * 2 + tipCapSmoothness + pivotCapSmoothness;
 
         private static readonly int ShaderColorProperty = Shader.PropertyToID("_Color");
+
+#if UNITY_EDITOR
+        private UVsLayout storedTextureType;
+#endif
 
         private void InitializeMesh()
         {
@@ -30,6 +35,8 @@ namespace Starblast.Tentacles
             mesh = new Mesh { name = "TentacleMesh" };
             mesh.MarkDynamic();
             meshFilter.sharedMesh = mesh;
+
+            vertices = new Vector2[VerticesCount];
         }
 
         private void InitializeUVs()
@@ -40,32 +47,47 @@ namespace Starblast.Tentacles
 
         private void DefineVertices()
         {
-            vertices = new Vector2[VerticesCount];
+            EnsureVertexArraySizes();
 
             UpdateUVs(out float segmentStep);
 
-            var points = new Vector2[smoothness];
             points[0] = Pivot.position.GetCubicBezierPoint(Segments[0].position, Segments[1].position, Tip.position, 0);
 
-            var firstIndex = (pivotCapSmoothness + 1) / 2;
-            var lastIndex = vertices.Length - (pivotCapSmoothness + 1) + firstIndex;
+            CalculateVerticesPositions(segmentStep);
+            CalculateTipCapVertices(segmentStep);
+            CalculatePivotCapVertices();
+        }
+
+        private void EnsureVertexArraySizes()
+        {
+            if (vertices.Length != VerticesCount)
+                vertices = new Vector2[VerticesCount];
+
+            if (points == null || points.Length != smoothness)
+                points = new Vector2[smoothness];
+        }
+
+        private void CalculateVerticesPositions(float segmentStep)
+        {
+            int firstIndex = (pivotCapSmoothness + 1) / 2;
+            int lastIndex = vertices.Length - (pivotCapSmoothness + 1) + firstIndex;
             Vector2 perpendicular = default;
+
             for (int i = 1; i < smoothness; i++)
             {
                 points[i] = Pivot.position.GetCubicBezierPoint(Segments[0].position, Segments[1].position, Tip.position,
                     i / (smoothness - 1f));
                 var curve = shape.Evaluate(((float)i).Normalize(0, smoothness));
+
                 points[i - 1].GetPerpendicularNoAlloc(points[i], ref perpendicular);
-                vertices[i + firstIndex] = points[i] +
-                                           perpendicular.normalized * (curve * width);
+                vertices[i + firstIndex] = points[i] + perpendicular.normalized * (curve * width);
+
                 points[i - 1].GetPerpendicularNoAlloc(points[i], ref perpendicular, -1f);
-                vertices[lastIndex - i] = points[i] +
-                                          perpendicular.normalized * (curve * width);
+                vertices[lastIndex - i] = points[i] + perpendicular.normalized * (curve * width);
 
                 if (renewUVs)
                 {
-                    var y = segmentStep * i / width * .5f /*/ thickness*/; // TODO: consider minimal height
-                    //y = Mathf.Clamp(y, segmentStep * 3, y);
+                    var y = segmentStep * i / width * .5f;
                     uvs[i + firstIndex] = new Vector2(0, y);
                     uvs[lastIndex - i] = new Vector2(1f, y);
 
@@ -75,65 +97,72 @@ namespace Starblast.Tentacles
                 }
             }
 
-            var curve2 = shape.Evaluate(0) * width;
+            SetFirstPointVertices(firstIndex, lastIndex);
+        }
+
+        private void SetFirstPointVertices(int firstIndex, int lastIndex)
+        {
+            var curve = shape.Evaluate(0) * width;
+            Vector2 perpendicular = default;
+
             points[0].GetPerpendicularNoAlloc(points[1], ref perpendicular);
-            vertices[firstIndex] = points[0] + perpendicular.normalized * curve2;
+            vertices[firstIndex] = points[0] + perpendicular.normalized * curve;
+
             points[0].GetPerpendicularNoAlloc(points[1], ref perpendicular, -1f);
-            vertices[lastIndex] = points[0] + perpendicular.normalized * curve2;
+            vertices[lastIndex] = points[0] + perpendicular.normalized * curve;
 
             if (renewUVs)
             {
                 uvs[firstIndex] = new Vector2(0, 0);
                 uvs[lastIndex] = new Vector2(1f, 0);
             }
+        }
 
-            // Define cap on tip
-            if (tipCapSmoothness != 0)
+        private void CalculateTipCapVertices(float segmentStep)
+        {
+            if (tipCapSmoothness == 0) return;
+
+            Vector2 pivot = default;
+            if (renewUVs) pivot = new Vector2(.5f, segmentStep * (smoothness - 1) / width * .5f);
+
+            var step = 180 / (tipCapSmoothness + 1);
+            int indexAfterTip = smoothness + tipCapSmoothness + (pivotCapSmoothness + 1) / 2;
+            int indexBeforeTip = smoothness - 1 + (pivotCapSmoothness + 1) / 2;
+
+            for (int i = 1; i <= tipCapSmoothness; i++)
             {
-                Vector2 pivot = default;
-                if (renewUVs) pivot = new Vector2(.5f, segmentStep * (smoothness - 1) / width * .5f);
-
-                var step = 180 / (tipCapSmoothness + 1);
-                var indexAfterTip = smoothness + tipCapSmoothness + firstIndex;
-                var indexBeforeTip = smoothness - 1 + firstIndex;
-                var length = tipCapSmoothness + 1;
-                for (int i = 1; i < length; i++)
-                {
-                    vertices[indexAfterTip - i] =
-                        RotatePointAroundPivot(vertices[indexBeforeTip], Tip.position, step * i + 180);
-                    if (renewUVs)
-                    {
-                        uvs[indexAfterTip - i] =
-                            RotatePointAroundPivot(uvs[indexBeforeTip], pivot, step * i + 180);
-                    }
-                }
+                vertices[indexAfterTip - i] =
+                    RotatePointAroundPivot(vertices[indexBeforeTip], Tip.position, step * i + 180);
+                if (renewUVs)
+                    uvs[indexAfterTip - i] = RotatePointAroundPivot(uvs[indexBeforeTip], pivot, step * i + 180);
             }
+        }
 
-            // Define pivot cap
-            if (pivotCapSmoothness != 0)
+        private void CalculatePivotCapVertices()
+        {
+            if (pivotCapSmoothness == 0) return;
+
+            Vector2 pivot = default;
+            if (renewUVs) pivot = new Vector2(.5f, 0);
+
+            var step = 180 / (pivotCapSmoothness + 1);
+            int j = 1;
+            for (int i = 1; i <= pivotCapSmoothness + 1; i++)
             {
-                Vector2 pivot = default;
-                if (renewUVs) pivot = new Vector2(.5f, 0);
-
-                var step = 180 / (pivotCapSmoothness + 1);
-                var j = 1;
-                var length = pivotCapSmoothness + 1;
-                for (int i = 1; i <= length; i++)
+                var angle = step * i + 180;
+                if (i <= (pivotCapSmoothness + 1) / 2)
                 {
-                    var angle = step * i + 180;
-                    if (i <= firstIndex)
-                    {
-                        vertices[firstIndex - i] =
-                            RotatePointAroundPivot(vertices[lastIndex], Pivot.position, angle);
-                        if (renewUVs)
-                            uvs[firstIndex - i] = RotatePointAroundPivot(uvs[lastIndex], pivot, angle);
-                    }
-                    else
-                    {
-                        var index = vertices.Length - j++;
-                        vertices[index] = RotatePointAroundPivot(vertices[lastIndex], Pivot.position, angle);
-                        if (renewUVs) uvs[index] = RotatePointAroundPivot(uvs[lastIndex], pivot, angle);
-                    }
+                    vertices[(pivotCapSmoothness + 1) / 2 - i] =
+                        RotatePointAroundPivot(vertices[vertices.Length - 1], Pivot.position, angle);
+                    if (renewUVs)
+                        uvs[(pivotCapSmoothness + 1) / 2 - i] =
+                            RotatePointAroundPivot(uvs[vertices.Length - 1], pivot, angle);
+                }
+                else
+                {
+                    var index = vertices.Length - j++;
+                    vertices[index] = RotatePointAroundPivot(vertices[vertices.Length - 1], Pivot.position, angle);
+                    if (renewUVs) uvs[index] = RotatePointAroundPivot(uvs[vertices.Length - 1], pivot, angle);
                 }
             }
         }
@@ -141,7 +170,6 @@ namespace Starblast.Tentacles
         private void UpdateUVs(out float segmentStep)
         {
             segmentStep = 0f;
-
 #if UNITY_EDITOR
             if (textureType != storedTextureType || uvs == null || uvs.Length != VerticesCount)
             {
@@ -150,93 +178,51 @@ namespace Starblast.Tentacles
                 renewUVs = true;
             }
 #endif
-            if (renewUVs)
+            if (!renewUVs) return;
+
+            if (textureType == UVsLayout.SolidColor)
             {
-                if (textureType == UVsLayout.SolidColor)
-                {
-                    var position = new Vector2(.5f, .5f);
-                    for (int i = 0; i < uvs.Length; i++)
-                    {
-                        uvs[i] = position;
-                    }
+                Vector2 position = new Vector2(.5f, .5f);
+                for (int i = 0; i < uvs.Length; i++)
+                    uvs[i] = position;
 
-                    renewUVs = false;
-                }
-                else
-                {
-                    var distance = 0f;
-                    var minDistance = 0f;
-                    for (int i = 0; i < Joints.Length; i++)
-                    {
-                        minDistance += Joints[i].distance;
-                    }
-
-                    distance = (Tip.position - Pivot.position).magnitude;
-                    segmentStep = Mathf.Clamp(distance, minDistance * .5f, distance) / (smoothness - 1);
-                }
-            }
-        }
-
-#if UNITY_EDITOR
-        private UVsLayout storedTextureType;
-
-
-        private void RenderMesh()
-        {
-            meshFilter.sharedMesh.Clear();
-
-            var meshVertices = new Vector3[vertices.Length];
-
-            var z = transform.position.z;
-            for (int i = 0; i < vertices.Length; i++)
-            {
-                meshVertices[i] = Pivot.transform.InverseTransformPoint(new Vector3(vertices[i].x, vertices[i].y, z));
-            }
-
-            meshFilter.sharedMesh.vertices = meshVertices;
-
-            int index = 0, length = (vertices.Length - (vertices.Length % 2 == 0 ? 2 : 1)) * 3;
-            var triangles = new int[length];
-            for (int i = 0; i < length; i += 6)
-            {
-                triangles[i] = index;
-                triangles[i + 1] = vertices.Length - 2 - index;
-                triangles[i + 2] = vertices.Length - 1 - index;
-
-                triangles[i + 3] = index;
-                triangles[i + 4] = index + 1;
-                triangles[i + 5] = vertices.Length - 2 - index;
-                index++;
-            }
-
-            meshFilter.sharedMesh.triangles = triangles;
-
-            meshFilter.sharedMesh.uv = uvs;
-
-
-            if (renewUVs && textureType == UVsLayout.Stretchy)
-            {
                 renewUVs = false;
             }
+            else
+            {
+                float distance = (Tip.position - Pivot.position).magnitude;
+                float minDistance = 0f;
+                foreach (var joint in Joints)
+                    minDistance += joint.distance;
+
+                segmentStep = Mathf.Clamp(distance, minDistance * .5f, distance) / (smoothness - 1);
+            }
         }
-
-
-#else
-        //private Mesh mesh;
 
         private void RenderMesh()
         {
             var meshVertices = new Vector3[vertices.Length];
-
-            var z = transform.position.z;
+            float z = transform.position.z;
             for (int i = 0; i < vertices.Length; i++)
             {
                 meshVertices[i] = Pivot.transform.InverseTransformPoint(new Vector3(vertices[i].x, vertices[i].y, z));
             }
+
             meshFilter.sharedMesh.vertices = meshVertices;
 
-            int index = 0, length = (vertices.Length - (vertices.Length % 2 == 0 ? 2 : 1)) * 3;
-            var triangles = new int[length];
+            GenerateTriangles();
+            meshFilter.sharedMesh.uv = uvs;
+
+            if (renewUVs && textureType == UVsLayout.Stretchy)
+                renewUVs = false;
+        }
+
+        private void GenerateTriangles()
+        {
+            int index = 0;
+            int length = (vertices.Length - (vertices.Length % 2 == 0 ? 2 : 1)) * 3;
+            int[] triangles = new int[length];
+
             for (int i = 0; i < length; i += 6)
             {
                 triangles[i] = index;
@@ -248,20 +234,23 @@ namespace Starblast.Tentacles
                 triangles[i + 5] = vertices.Length - 2 - index;
                 index++;
             }
+
             meshFilter.sharedMesh.triangles = triangles;
-
-            if (renewUVs)
-            {
-                meshFilter.sharedMesh.uv = uvs;
-                if (textureType == UVsLayout.stretchy) 
-                {
-                    renewUVs = false;
-                }
-            }
         }
-#endif
 
-        private static Vector3 RotatePointAroundPivot(Vector3 point, Vector3 pivot, float angle) =>
-            Quaternion.Euler(new Vector3(0, 0, angle)) * (point - pivot) + pivot;
+        private void OnDestroy()
+        {
+#if UNITY_EDITOR
+            if (meshFilter.sharedMesh != null)
+            {
+                DestroyImmediate(meshFilter.sharedMesh);
+            }
+#endif
+        }
+
+        private static Vector3 RotatePointAroundPivot(Vector3 point, Vector3 pivot, float angle)
+        {
+            return Quaternion.Euler(0, 0, angle) * (point - pivot) + pivot;
+        }
     }
 }

@@ -34,13 +34,7 @@ namespace Starblast.Tentacles
             }
         }
 
-        private void OnDestroy()
-        {
-            if (meshFilter.sharedMesh != null)
-            {
-                DestroyImmediate(meshFilter.sharedMesh);
-            }
-        }
+        
 
         private void OnDrawGizmos()
         {
