@@ -1,3 +1,4 @@
+using Starblast.Extensions;
 using UnityEngine;
 
 namespace Starblast.Tentacles
@@ -31,7 +32,7 @@ namespace Starblast.Tentacles
             if (target != null && tipHingeJoint.connectedBody == null)
             {
                 //var direction = (Vector2)target.position - Tip.position;
-                Tip.AddForce(((Vector2)target.position - Tip.position) * Time.deltaTime * speed);
+                Tip.AddForce(((Vector2)target.position - Tip.position) * (Time.deltaTime * speed));
                 Debug.DrawLine(target.position, Tip.position, Color.gray);
             }
         }
@@ -110,12 +111,12 @@ namespace Starblast.Tentacles
         {
             switch (animation)
             {
-                case Animations.none:
+                case Animations.None:
                     break;
-                case Animations.wave:
+                case Animations.Wave:
                     WaveAnimation();
                     break;
-                case Animations.swing:
+                case Animations.Swing:
                     SwingAnimation();
                     break;
             }
@@ -123,40 +124,32 @@ namespace Starblast.Tentacles
 
         private void WaveAnimation()
         {
-            var fromPivotToSegment2 = Segments[1].position - Pivot.position;
-            //var middle1 = Pivot.position + fromPivotToSegment2.normalized * fromPivotToSegment2.magnitude * .5f;
-            //var pivotSin = Mathf.Sin(Time.time * frequency + animationDelay) * amplitude;
-            Segments[0].AddForce(
-                Utilities.GetPerpendicular(
-                    Pivot.position + fromPivotToSegment2.normalized * fromPivotToSegment2.magnitude * .5f,
-                    Pivot.position).normalized * (Mathf.Sin(Time.time * frequency + animationDelay) * amplitude));
+            var pivotPosition = Pivot.position;
+            var fromPivotToSegment2 = Segments[1].position - pivotPosition;
+            var middle1 = (pivotPosition + fromPivotToSegment2.normalized * (fromPivotToSegment2.magnitude * .5f));
 
-            var fromSegment1ToTip = Tip.position - Segments[0].position;
-            //var middle2 = Segments[0].position + fromSegment1ToTip.normalized * fromSegment1ToTip.magnitude * .5f;
-            //var tipSin = Mathf.Sin(Time.time * frequency + 1.5f + animationDelay) * amplitude;
-            Segments[1].AddForce(
-                Utilities.GetPerpendicular(
-                    Segments[0].position + fromSegment1ToTip.normalized * fromSegment1ToTip.magnitude * .5f,
-                    Tip.position).normalized * .9f *
-                (Mathf.Sin(Time.time * frequency + 1.5f + animationDelay) * amplitude));
+            Segments[0].AddForce(middle1.GetPerpendicular(pivotPosition).normalized *
+                                 (Mathf.Sin(Time.time * frequency + animationDelay) * amplitude));
+
+            var tipPosition = Tip.position;
+            var fromSegment1ToTip = tipPosition - Segments[0].position;
+            var middle2 = Segments[0].position + fromSegment1ToTip.normalized * (fromSegment1ToTip.magnitude * .5f);
+ 
+            Segments[1].AddForce(middle2.GetPerpendicular(tipPosition).normalized *
+                                 (.9f * (Mathf.Sin(Time.time * frequency + 1.5f + animationDelay) * amplitude)));
         }
 
         private void SwingAnimation()
         {
-            var fromPivotToSegment2 = Segments[1].position - Pivot.position;
-            //var middle1 = Pivot.position + fromPivotToSegment2.normalized * fromPivotToSegment2.magnitude * .5f;
+            var pivotPosition = Pivot.position;
+            var fromPivotToSegment2 = Segments[1].position - pivotPosition;
+            var middle1 = pivotPosition + fromPivotToSegment2.normalized * (fromPivotToSegment2.magnitude * .5f);
             var sin = Mathf.Sin(Time.time * frequency + animationDelay) * amplitude;
-            Segments[0].AddForce(Utilities
-                .GetPerpendicular(
-                    (Pivot.position + fromPivotToSegment2.normalized * fromPivotToSegment2.magnitude * .5f),
-                    Pivot.position).normalized * sin);
+            Segments[0].AddForce(middle1.GetPerpendicular(Pivot.position).normalized * sin);
 
             var fromSegment1ToTip = Tip.position - Segments[0].position;
-            //var middle2 = Segments[0].position + fromSegment1ToTip.normalized * fromSegment1ToTip.magnitude * .5f;
-            Segments[1].AddForce(Utilities.GetPerpendicular(Tip.position,
-                                     Segments[0].position + fromSegment1ToTip.normalized * fromSegment1ToTip.magnitude *
-                                     .5f).normalized *
-                                 sin);
+            var middle2 = Segments[0].position + fromSegment1ToTip.normalized * (fromSegment1ToTip.magnitude * .5f);
+            Segments[1].AddForce(Tip.position.GetPerpendicular(middle2).normalized * sin);
         }
     }
 }

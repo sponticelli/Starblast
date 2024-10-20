@@ -26,5 +26,6 @@ namespace Starblast.Extensions
             result.y = -direction.x * side;
             return result;
         }
+        
     }
 }

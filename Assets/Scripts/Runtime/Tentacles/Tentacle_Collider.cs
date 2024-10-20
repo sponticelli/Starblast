@@ -2,6 +2,8 @@ using UnityEngine;
 
 namespace Starblast.Tentacles
 {
+    
+    
     public partial class Tentacle
     {
         private PolygonCollider2D polygonCollider;
@@ -32,24 +34,28 @@ namespace Starblast.Tentacles
 
                 int i = 0, j = firstIndex;
 
-                if (pivotCapSmoothness == 1)
+                switch (pivotCapSmoothness)
                 {
-                    colliderPoints[i++] = tipTransform.InverseTransformPoint(vertices[0]);
-                }
-                else if (pivotCapSmoothness == 2)
-                {
-                    var pivotCapHalf = firstIndex / 2;
-                    colliderPoints[i++] = tipTransform.InverseTransformPoint(vertices[pivotCapHalf]);
-                    colliderPoints[length - 1] =
-                        tipTransform.InverseTransformPoint(vertices[vertices.Length - pivotCapHalf - 1]);
-                }
-                else if (pivotCapSmoothness >= 3)
-                {
-                    var pivotCapHalf = firstIndex / 2;
-                    colliderPoints[i++] = tipTransform.InverseTransformPoint(vertices[0]);
-                    colliderPoints[i++] = tipTransform.InverseTransformPoint(vertices[pivotCapHalf]);
-                    colliderPoints[colliderPoints.Length - 1] =
-                        tipTransform.InverseTransformPoint(vertices[vertices.Length - pivotCapHalf]);
+                    case 1:
+                        colliderPoints[i++] = tipTransform.InverseTransformPoint(vertices[0]);
+                        break;
+                    case 2:
+                    {
+                        var pivotCapHalf = firstIndex / 2;
+                        colliderPoints[i++] = tipTransform.InverseTransformPoint(vertices[pivotCapHalf]);
+                        colliderPoints[length - 1] =
+                            tipTransform.InverseTransformPoint(vertices[vertices.Length - pivotCapHalf - 1]);
+                        break;
+                    }
+                    case >= 3:
+                    {
+                        var pivotCapHalf = firstIndex / 2;
+                        colliderPoints[i++] = tipTransform.InverseTransformPoint(vertices[0]);
+                        colliderPoints[i++] = tipTransform.InverseTransformPoint(vertices[pivotCapHalf]);
+                        colliderPoints[colliderPoints.Length - 1] =
+                            tipTransform.InverseTransformPoint(vertices[vertices.Length - pivotCapHalf]);
+                        break;
+                    }
                 }
 
                 for (var k = 0; k < sideLength; k++)
@@ -60,22 +66,24 @@ namespace Starblast.Tentacles
 
                 colliderPoints[i++] = tipTransform.InverseTransformPoint(vertices[indexBeforeTip]);
 
-                if (tipCapSmoothness == 1)
+                switch (tipCapSmoothness)
                 {
-                    colliderPoints[i++] = tipTransform.InverseTransformPoint(vertices[indexBeforeTip + 1]);
-                }
-                else if (tipCapSmoothness == 2)
-                {
-                    colliderPoints[i++] = tipTransform.InverseTransformPoint(vertices[indexBeforeTip + 1]);
-                    colliderPoints[i++] = tipTransform.InverseTransformPoint(vertices[indexAfterTip - 1]);
-                }
-                else if (tipCapSmoothness >= 3)
-                {
-                    var tipCapHalf = (tipCapSmoothness + 1) / 4;
-                    colliderPoints[i++] = tipTransform.InverseTransformPoint(vertices[indexBeforeTip + tipCapHalf]);
-                    colliderPoints[i++] =
-                        tipTransform.InverseTransformPoint(vertices[indexBeforeTip + (tipCapSmoothness + 1) / 2]);
-                    colliderPoints[i++] = tipTransform.InverseTransformPoint(vertices[indexAfterTip - tipCapHalf]);
+                    case 1:
+                        colliderPoints[i++] = tipTransform.InverseTransformPoint(vertices[indexBeforeTip + 1]);
+                        break;
+                    case 2:
+                        colliderPoints[i++] = tipTransform.InverseTransformPoint(vertices[indexBeforeTip + 1]);
+                        colliderPoints[i++] = tipTransform.InverseTransformPoint(vertices[indexAfterTip - 1]);
+                        break;
+                    case >= 3:
+                    {
+                        var tipCapHalf = (tipCapSmoothness + 1) / 4;
+                        colliderPoints[i++] = tipTransform.InverseTransformPoint(vertices[indexBeforeTip + tipCapHalf]);
+                        colliderPoints[i++] =
+                            tipTransform.InverseTransformPoint(vertices[indexBeforeTip + (tipCapSmoothness + 1) / 2]);
+                        colliderPoints[i++] = tipTransform.InverseTransformPoint(vertices[indexAfterTip - tipCapHalf]);
+                        break;
+                    }
                 }
 
                 j = indexAfterTip;

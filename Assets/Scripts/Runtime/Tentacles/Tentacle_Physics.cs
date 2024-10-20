@@ -16,7 +16,10 @@ namespace Starblast.Tentacles
             {
                 float mass = Pivot.mass + Tip.mass;
                 for (int i = 0; i < Segments.Length; i++)
+                {
                     mass += Segments[i].mass;
+                }
+
                 return mass;
             }
             set
@@ -24,7 +27,9 @@ namespace Starblast.Tentacles
                 float segmentMass = value / (Segments.Length + 2);
                 Pivot.mass = Tip.mass = segmentMass;
                 for (int i = 0; i < Segments.Length; i++)
+                {
                     Segments[i].mass = segmentMass;
+                }
             }
         }
 
@@ -33,12 +38,14 @@ namespace Starblast.Tentacles
         /// </summary>
         public float Drag
         {
-            get { return Pivot.drag; }
+            get => Pivot.drag;
             set
             {
                 Pivot.drag = Tip.drag = value;
                 for (int i = 0; i < Segments.Length; i++)
+                {
                     Segments[i].drag = value;
+                }
             }
         }
 
@@ -47,12 +54,14 @@ namespace Starblast.Tentacles
         /// </summary>
         public float Gravity
         {
-            get { return Pivot.gravityScale; }
+            get => Pivot.gravityScale;
             set
             {
                 Pivot.gravityScale = Tip.gravityScale = value;
                 for (int i = 0; i < Segments.Length; i++)
+                {
                     Segments[i].gravityScale = value;
+                }
             }
         }
 
@@ -61,11 +70,13 @@ namespace Starblast.Tentacles
         /// </summary>
         public float Stiffness
         {
-            get { return Joints[0].frequency; }
+            get => Joints[0].frequency;
             set
             {
                 for (int i = 0; i < Joints.Length; i++)
+                {
                     Joints[i].frequency = value;
+                }
             }
         }
 
@@ -93,8 +104,11 @@ namespace Starblast.Tentacles
         {
             Joints = new SpringJoint2D[1 + Segments.Length];
             for (int i = 0; i < Segments.Length; i++)
+            {
                 Joints[i] = Segments[i].GetComponent<SpringJoint2D>();
-            Joints[Joints.Length - 1] = Tip.GetComponent<SpringJoint2D>();
+            }
+
+            Joints[^1] = Tip.GetComponent<SpringJoint2D>();
 
             pivotHingeJoint = Pivot.GetComponent<HingeJoint2D>();
             tipHingeJoint = Tip.GetComponent<HingeJoint2D>();
@@ -104,7 +118,10 @@ namespace Starblast.Tentacles
         {
             Segments = new Rigidbody2D[2];
             for (int i = 0; i < Segments.Length;)
+            {
                 Segments[i++] = transform.GetChild(i).GetComponent<Rigidbody2D>();
+            }
+
             Tip = transform.GetChild(3).GetComponent<Rigidbody2D>();
         }
     }

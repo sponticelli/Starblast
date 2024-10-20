@@ -1,3 +1,4 @@
+using Starblast.Extensions;
 using UnityEngine;
 
 namespace Starblast.Tentacles
@@ -10,16 +11,20 @@ namespace Starblast.Tentacles
         private Vector2[] uvs;
         private Mesh mesh;
         private MaterialPropertyBlock materialBlock;
-        
+
         private bool renewUVs = true;
-        
+
+        private int VerticesCount => smoothness * 2 + tipCapSmoothness + pivotCapSmoothness;
+
+        private static readonly int ShaderColorProperty = Shader.PropertyToID("_Color");
+
         private void InitializeMesh()
         {
             meshFilter = Pivot.GetComponent<MeshFilter>();
             meshRenderer = Pivot.GetComponent<MeshRenderer>();
             meshRenderer.material = material;
             materialBlock = new MaterialPropertyBlock();
-            materialBlock.SetColor("_Color", color);
+            materialBlock.SetColor(ShaderColorProperty, color);
             meshRenderer.SetPropertyBlock(materialBlock);
 
             mesh = new Mesh { name = "TentacleMesh" };
@@ -40,19 +45,22 @@ namespace Starblast.Tentacles
             UpdateUVs(out float segmentStep);
 
             var points = new Vector2[smoothness];
-            points[0] = Utilities.GetPoint(Pivot.position, Segments[0].position, Segments[1].position, Tip.position, 0);
+            points[0] = Pivot.position.GetCubicBezierPoint(Segments[0].position, Segments[1].position, Tip.position, 0);
 
-            int firstIndex = (pivotCapSmoothness + 1) / 2,
-                lastIndex = vertices.Length - (pivotCapSmoothness + 1) + firstIndex;
+            var firstIndex = (pivotCapSmoothness + 1) / 2;
+            var lastIndex = vertices.Length - (pivotCapSmoothness + 1) + firstIndex;
+            Vector2 perpendicular = default;
             for (int i = 1; i < smoothness; i++)
             {
-                points[i] = Utilities.GetPoint(Pivot.position, Segments[0].position, Segments[1].position, Tip.position,
+                points[i] = Pivot.position.GetCubicBezierPoint(Segments[0].position, Segments[1].position, Tip.position,
                     i / (smoothness - 1f));
-                var curve = shape.Evaluate(Utilities.Normalize(i, smoothness));
+                var curve = shape.Evaluate(((float)i).Normalize(0, smoothness));
+                points[i - 1].GetPerpendicularNoAlloc(points[i], ref perpendicular);
                 vertices[i + firstIndex] = points[i] +
-                                           Utilities.GetPerpendicular(points[i - 1], points[i]).normalized * (curve * width);
+                                           perpendicular.normalized * (curve * width);
+                points[i - 1].GetPerpendicularNoAlloc(points[i], ref perpendicular, -1f);
                 vertices[lastIndex - i] = points[i] +
-                                          Utilities.GetPerpendicular(points[i - 1], points[i], -1f).normalized * (curve * width);
+                                          perpendicular.normalized * (curve * width);
 
                 if (renewUVs)
                 {
@@ -68,8 +76,10 @@ namespace Starblast.Tentacles
             }
 
             var curve2 = shape.Evaluate(0) * width;
-            vertices[firstIndex] = points[0] + Utilities.GetPerpendicular(points[0], points[1]).normalized * curve2;
-            vertices[lastIndex] = points[0] + Utilities.GetPerpendicular(points[0], points[1], -1f).normalized * curve2;
+            points[0].GetPerpendicularNoAlloc(points[1], ref perpendicular);
+            vertices[firstIndex] = points[0] + perpendicular.normalized * curve2;
+            points[0].GetPerpendicularNoAlloc(points[1], ref perpendicular, -1f);
+            vertices[lastIndex] = points[0] + perpendicular.normalized * curve2;
 
             if (renewUVs)
             {
@@ -83,17 +93,19 @@ namespace Starblast.Tentacles
                 Vector2 pivot = default;
                 if (renewUVs) pivot = new Vector2(.5f, segmentStep * (smoothness - 1) / width * .5f);
 
-                int step = 180 / (tipCapSmoothness + 1),
-                    indexAfterTip = smoothness + tipCapSmoothness + firstIndex,
-                    indexBeforeTip = smoothness - 1 + firstIndex,
-                    length = tipCapSmoothness + 1;
+                var step = 180 / (tipCapSmoothness + 1);
+                var indexAfterTip = smoothness + tipCapSmoothness + firstIndex;
+                var indexBeforeTip = smoothness - 1 + firstIndex;
+                var length = tipCapSmoothness + 1;
                 for (int i = 1; i < length; i++)
                 {
                     vertices[indexAfterTip - i] =
-                        Utilities.RotatePointAroundPivot(vertices[indexBeforeTip], Tip.position, step * i + 180);
+                        RotatePointAroundPivot(vertices[indexBeforeTip], Tip.position, step * i + 180);
                     if (renewUVs)
+                    {
                         uvs[indexAfterTip - i] =
-                            Utilities.RotatePointAroundPivot(uvs[indexBeforeTip], pivot, step * i + 180);
+                            RotatePointAroundPivot(uvs[indexBeforeTip], pivot, step * i + 180);
+                    }
                 }
             }
 
@@ -103,22 +115,24 @@ namespace Starblast.Tentacles
                 Vector2 pivot = default;
                 if (renewUVs) pivot = new Vector2(.5f, 0);
 
-                int step = 180 / (pivotCapSmoothness + 1), j = 1, length = pivotCapSmoothness + 1;
+                var step = 180 / (pivotCapSmoothness + 1);
+                var j = 1;
+                var length = pivotCapSmoothness + 1;
                 for (int i = 1; i <= length; i++)
                 {
                     var angle = step * i + 180;
                     if (i <= firstIndex)
                     {
                         vertices[firstIndex - i] =
-                            Utilities.RotatePointAroundPivot(vertices[lastIndex], Pivot.position, angle);
+                            RotatePointAroundPivot(vertices[lastIndex], Pivot.position, angle);
                         if (renewUVs)
-                            uvs[firstIndex - i] = Utilities.RotatePointAroundPivot(uvs[lastIndex], pivot, angle);
+                            uvs[firstIndex - i] = RotatePointAroundPivot(uvs[lastIndex], pivot, angle);
                     }
                     else
                     {
                         var index = vertices.Length - j++;
-                        vertices[index] = Utilities.RotatePointAroundPivot(vertices[lastIndex], Pivot.position, angle);
-                        if (renewUVs) uvs[index] = Utilities.RotatePointAroundPivot(uvs[lastIndex], pivot, angle);
+                        vertices[index] = RotatePointAroundPivot(vertices[lastIndex], Pivot.position, angle);
+                        if (renewUVs) uvs[index] = RotatePointAroundPivot(uvs[lastIndex], pivot, angle);
                     }
                 }
             }
@@ -142,19 +156,30 @@ namespace Starblast.Tentacles
                 {
                     var position = new Vector2(.5f, .5f);
                     for (int i = 0; i < uvs.Length; i++)
+                    {
                         uvs[i] = position;
+                    }
+
                     renewUVs = false;
                 }
                 else
                 {
                     var distance = 0f;
                     var minDistance = 0f;
-                    for (int i = 0; i < Joints.Length; i++) minDistance += Joints[i].distance; // TODO: simplify this
+                    for (int i = 0; i < Joints.Length; i++)
+                    {
+                        minDistance += Joints[i].distance;
+                    }
+
                     distance = (Tip.position - Pivot.position).magnitude;
                     segmentStep = Mathf.Clamp(distance, minDistance * .5f, distance) / (smoothness - 1);
                 }
             }
         }
+
+#if UNITY_EDITOR
+        private UVsLayout storedTextureType;
+
 
         private void RenderMesh()
         {
@@ -164,7 +189,10 @@ namespace Starblast.Tentacles
 
             var z = transform.position.z;
             for (int i = 0; i < vertices.Length; i++)
+            {
                 meshVertices[i] = Pivot.transform.InverseTransformPoint(new Vector3(vertices[i].x, vertices[i].y, z));
+            }
+
             meshFilter.sharedMesh.vertices = meshVertices;
 
             int index = 0, length = (vertices.Length - (vertices.Length % 2 == 0 ? 2 : 1)) * 3;
@@ -184,10 +212,56 @@ namespace Starblast.Tentacles
             meshFilter.sharedMesh.triangles = triangles;
 
             meshFilter.sharedMesh.uv = uvs;
-            
+
 
             if (renewUVs && textureType == UVsLayout.Stretchy)
+            {
                 renewUVs = false;
+            }
         }
+
+
+#else
+        //private Mesh mesh;
+
+        private void RenderMesh()
+        {
+            var meshVertices = new Vector3[vertices.Length];
+
+            var z = transform.position.z;
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                meshVertices[i] = Pivot.transform.InverseTransformPoint(new Vector3(vertices[i].x, vertices[i].y, z));
+            }
+            meshFilter.sharedMesh.vertices = meshVertices;
+
+            int index = 0, length = (vertices.Length - (vertices.Length % 2 == 0 ? 2 : 1)) * 3;
+            var triangles = new int[length];
+            for (int i = 0; i < length; i += 6)
+            {
+                triangles[i] = index;
+                triangles[i + 1] = vertices.Length - 2 - index;
+                triangles[i + 2] = vertices.Length - 1 - index;
+
+                triangles[i + 3] = index;
+                triangles[i + 4] = index + 1;
+                triangles[i + 5] = vertices.Length - 2 - index;
+                index++;
+            }
+            meshFilter.sharedMesh.triangles = triangles;
+
+            if (renewUVs)
+            {
+                meshFilter.sharedMesh.uv = uvs;
+                if (textureType == UVsLayout.stretchy) 
+                {
+                    renewUVs = false;
+                }
+            }
+        }
+#endif
+
+        private static Vector3 RotatePointAroundPivot(Vector3 point, Vector3 pivot, float angle) =>
+            Quaternion.Euler(new Vector3(0, 0, angle)) * (point - pivot) + pivot;
     }
 }
