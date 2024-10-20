@@ -73,6 +73,8 @@ namespace Starblast.Environments.Boundaries
 
         private void Initialize()
         {
+            _boundaryManager = ServiceLocator.Main.Get<IBoundaryManager>();
+            
             foreach (var boundaryText in _boundaryTexts)
             {
                 ZoneType zone = boundaryText.zone;

@@ -17,6 +17,11 @@ namespace Starblast.Environments.Boundaries
             // DO NOTHING
             IsInitialized = true;
         }
+        
+        private void Start()
+        {
+            Initialize();
+        }
 
         public ZoneType GetZoneType(Vector3 position)
         {
