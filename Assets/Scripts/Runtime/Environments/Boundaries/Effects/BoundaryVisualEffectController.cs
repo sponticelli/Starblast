@@ -93,23 +93,21 @@ namespace Starblast.Environments.Boundaries
 
         public void SetEffectIntensity(float intensity)
         {
-            if (_currentZoneSettings != null)
-            {
-                var luminosity = _currentZoneSettings.StarLuminosity.Min +
-                                 (_currentZoneSettings.StarLuminosity.Max -
-                                  _currentZoneSettings.StarLuminosity.Min) * intensity;
-                _starfieldManager.SetLuminosity(luminosity);
+            if (_currentZoneSettings == null) return;
+            var luminosity = _currentZoneSettings.StarLuminosity.Min +
+                             (_currentZoneSettings.StarLuminosity.Max -
+                              _currentZoneSettings.StarLuminosity.Min) * intensity;
+            _starfieldManager.SetLuminosity(luminosity);
 
-                var saturation = _currentZoneSettings.ColorSaturation.Min +
-                                 (_currentZoneSettings.ColorSaturation.Max -
-                                  _currentZoneSettings.ColorSaturation.Min) * intensity;
-                _volumeManager.SetSaturation(saturation);
+            var saturation = _currentZoneSettings.ColorSaturation.Min +
+                             (_currentZoneSettings.ColorSaturation.Max -
+                              _currentZoneSettings.ColorSaturation.Min) * intensity;
+            _volumeManager.SetSaturation(saturation);
 
-                var vignetteIntensity = _currentZoneSettings.VignetteIntensity.Min +
-                                        (_currentZoneSettings.VignetteIntensity.Max -
-                                         _currentZoneSettings.VignetteIntensity.Min) * intensity;
-                _volumeManager.SetVignetteIntensity(vignetteIntensity);
-            }
+            var vignetteIntensity = _currentZoneSettings.VignetteIntensity.Min +
+                                    (_currentZoneSettings.VignetteIntensity.Max -
+                                     _currentZoneSettings.VignetteIntensity.Min) * intensity;
+            _volumeManager.SetVignetteIntensity(vignetteIntensity);
         }
 
         private ZoneSettings GetZoneSettings(ZoneType zone)
@@ -145,7 +143,18 @@ namespace Starblast.Environments.Boundaries
                         _kraken.gameObject.SetActive(true);
                     }
                 }
-                _kraken.SetBoundaryManagerAndZoneSettings(_boundaryManager, _currentZoneSettings);
+
+                Debug.Log($"Kraken: {_kraken != null}");
+                Debug.Log($"Zone: {_currentZoneSettings.ZoneType} ");
+                Debug.Log($"Enabled: {_currentZoneSettings.KrakenSettings.IsEnabled}");
+                
+                
+                var isKrakenEnabled = _currentZoneSettings.KrakenSettings.IsEnabled;
+                if (_boundaryManager == null) _boundaryManager = ServiceLocator.Main.Get<IBoundaryManager>();
+                var zoneRadius = _boundaryManager.GetZoneRadius(_currentZoneSettings.ZoneType);
+                _kraken.SetBoundaryManagerAndZoneSettings(isKrakenEnabled, zoneRadius);
+
+                    
             }
         }
 

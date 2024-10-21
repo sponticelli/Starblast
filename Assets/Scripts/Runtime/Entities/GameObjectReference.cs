@@ -60,11 +60,11 @@ namespace Starblast.Entities
             
             if (_exists)
             {
-                onAddedEvent.Invoke(_item);
+                onAddedEvent?.Invoke(_item);
             }
             else
             {
-                onRemovedEvent.Invoke(_item);
+                onRemovedEvent?.Invoke(_item);
             }
         }
         

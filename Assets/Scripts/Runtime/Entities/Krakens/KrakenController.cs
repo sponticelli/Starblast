@@ -23,17 +23,19 @@ namespace Starblast.Entities.Krakens
         private PlayerController _player;
         
         private bool _tentaclesActive = true;
-        private IBoundaryManager _boundaryManager;
-        private BoundaryVisualEffectController.ZoneSettings _currentZoneSettings;
 
-        public Vector3 Target { set; get; }
+        private bool _isEnabled;
+        private float _zoneRadius;
+
+        private Vector3 _target;
         
-        public void SetBoundaryManagerAndZoneSettings(IBoundaryManager boundaryManager, BoundaryVisualEffectController.ZoneSettings zoneSettings)
+        public void SetBoundaryManagerAndZoneSettings(
+            bool krakenSettingsIsEnabled,
+            float getZoneRadius)
         {
-            _boundaryManager = boundaryManager;
-            _currentZoneSettings = zoneSettings;
+            _isEnabled = krakenSettingsIsEnabled;
+            _zoneRadius = getZoneRadius;
         }
-        
 
         public void OnPlayerAdded(PlayerController player)
         {
@@ -44,7 +46,6 @@ namespace Starblast.Entities.Krakens
                 tentacle.TargetRigidbody = playerRigidbody;
             }
         }
-        
         
         private void SwitchTentacles(bool active)
         {
@@ -59,36 +60,32 @@ namespace Starblast.Entities.Krakens
 
         private void Update()
         {
-            // Rotate 2d towards player
-            if (_player != null)
-            {
-                HandleBoundaryMovement();
-                RotateTowardsPlayer();
-            }
+            if (_player == null) return;
+            HandleBoundaryMovement();
+            RotateTowardsPlayer();
         }
 
         private void HandleBoundaryMovement()
         {
-            if (_currentZoneSettings.KrakenSettings.IsEnabled)
+            if (_isEnabled)
             {
                 var krakenPosition = transform.position;
                 var distance = krakenPosition.magnitude;
-                var zoneRadius = _boundaryManager.GetZoneRadius(_currentZoneSettings.ZoneType);
-
-                if (distance > zoneRadius)
+                
+                if (distance > _zoneRadius)
                 {
-                    Target = _player.transform.position;
+                    _target = _player.transform.position;
                 }
                 else
                 {
                     var target = transform.position;
-                    target += krakenPosition.normalized * zoneRadius;
-                    Target = target;
+                    target += krakenPosition.normalized * _zoneRadius;
+                    _target = target;
                 }
             }
             else
             {
-                if ((transform.position - Target).magnitude < 0.1f)
+                if ((transform.position - _target).magnitude < 0.1f)
                 {
                     gameObject.SetActive(false);
                 }
@@ -99,9 +96,7 @@ namespace Starblast.Entities.Krakens
         
         private void MoveTowardsTarget()
         {
-            if (Target == null) return;
-
-            Vector3 direction = Target - transform.position;
+            Vector3 direction = _target - transform.position;
             transform.position += direction.normalized * (_movementSpeed * Time.deltaTime);
         }
 
@@ -114,5 +109,7 @@ namespace Starblast.Entities.Krakens
             // Check if player is in range
             SwitchTentacles(direction.magnitude <= _attackRange);
         }
+
+      
     }
 }
