@@ -1,6 +1,4 @@
 using System;
-using Starblast.Entities.Krakens;
-using Starblast.Extensions;
 using Starblast.Managers.Starfields;
 using Starblast.Managers.Volumes;
 using Starblast.Player;
@@ -13,12 +11,6 @@ namespace Starblast.Environments.Boundaries
 {
     public class BoundaryVisualEffectController : MonoBehaviour, IBoundaryVisualEffectController
     {
-        [Serializable]
-        public class KrakenSettings
-        {
-            public bool IsEnabled;
-            public float RadiusOffset;
-        }
 
         [Serializable]
         public class ZoneSettings
@@ -27,25 +19,20 @@ namespace Starblast.Environments.Boundaries
             public FloatRange StarLuminosity;
             public IntRange ColorSaturation;
             public FloatRange VignetteIntensity;
-            public KrakenSettings KrakenSettings;
         }
 
-        [Header("Settings")] [SerializeField] private ZoneSettings[] _zoneSettings;
+        [Header("Settings")] 
+        [SerializeField] private ZoneSettings[] _zoneSettings;
 
         private StarfieldManager _starfieldManager;
         private VolumeController _volumeManager;
         private ZoneSettings _currentZoneSettings;
-        private ZoneSettings _previousZoneSettings;
-        private KrakenController _kraken;
-        private IBoundaryManager _boundaryManager;
-        private PlayerController _player;
 
 
         private void Start()
         {
             _starfieldManager = ServiceLocator.Main.Get<StarfieldManager>();
             _volumeManager = ServiceLocator.Main.Get<VolumeController>();
-            _boundaryManager = ServiceLocator.Main.Get<IBoundaryManager>();
             _currentZoneSettings = GetZoneSettings(ZoneType.SafeZone);
         }
 
@@ -59,55 +46,48 @@ namespace Starblast.Environments.Boundaries
 
         public void OnEnterZone(ZoneType zone)
         {
-            Debug.Log($"Enter: {zone}");
             _currentZoneSettings = GetZoneSettings(zone);
-            EnableKraken();
         }
 
         public void OnExitZone(ZoneType zone)
         {
-            Debug.Log($"Exit: {zone}");
-            _previousZoneSettings = _currentZoneSettings;
+
         }
 
-        public void OnKrakenAdded(KrakenController kraken)
-        {
-            _kraken = kraken;
-            EnableKraken();
-        }
-
-        public void OnKrakenRemoved(KrakenController kraken)
-        {
-            _kraken = null;
-        }
-
-        public void OnPlayerRemoved(PlayerController player)
-        {
-            _player = null;
-        }
-
-        public void OnPlayerAdded(PlayerController player)
-        {
-            _player = player;
-        }
-
+        
+        private ZoneSettings _previousZoneSettings;
         public void SetEffectIntensity(float intensity)
         {
             if (_currentZoneSettings == null) return;
             var luminosity = _currentZoneSettings.StarLuminosity.Min +
                              (_currentZoneSettings.StarLuminosity.Max -
                               _currentZoneSettings.StarLuminosity.Min) * intensity;
+            
+            
+            
             _starfieldManager.SetLuminosity(luminosity);
 
             var saturation = _currentZoneSettings.ColorSaturation.Min +
                              (_currentZoneSettings.ColorSaturation.Max -
                               _currentZoneSettings.ColorSaturation.Min) * intensity;
             _volumeManager.SetSaturation(saturation);
+            
+            
 
             var vignetteIntensity = _currentZoneSettings.VignetteIntensity.Min +
                                     (_currentZoneSettings.VignetteIntensity.Max -
                                      _currentZoneSettings.VignetteIntensity.Min) * intensity;
             _volumeManager.SetVignetteIntensity(vignetteIntensity);
+            
+            if (_currentZoneSettings != _previousZoneSettings)
+            {
+                Debug.Log($"Visual Enter: {_currentZoneSettings.ZoneType} Leave: {_previousZoneSettings?.ZoneType}");
+                _previousZoneSettings = _currentZoneSettings;
+                Debug.Log($"Luminosity: {luminosity}");
+                Debug.Log($"Saturation: {saturation}");
+                Debug.Log($"Vignette: {vignetteIntensity}");
+            }
+            
         }
 
         private ZoneSettings GetZoneSettings(ZoneType zone)
@@ -122,42 +102,5 @@ namespace Starblast.Environments.Boundaries
 
             return null;
         }
-
-        private void EnableKraken()
-        {
-            if (_kraken != null)
-            {
-                if (_currentZoneSettings==null)
-                {
-                    _currentZoneSettings = GetZoneSettings(ZoneType.SafeZone);
-                    _kraken.gameObject.SetActive(false);
-                }
-                if (_currentZoneSettings.KrakenSettings.IsEnabled)
-                {
-                    if (_kraken.gameObject.activeSelf == false)
-                    {
-                        var direction = _player.transform.position.normalized * 
-                                        (_currentZoneSettings.KrakenSettings.RadiusOffset + 
-                                         _boundaryManager.GetZoneRadius(_currentZoneSettings.ZoneType));
-                        _kraken.transform.position = direction;
-                        _kraken.gameObject.SetActive(true);
-                    }
-                }
-
-                Debug.Log($"Kraken: {_kraken != null}");
-                Debug.Log($"Zone: {_currentZoneSettings.ZoneType} ");
-                Debug.Log($"Enabled: {_currentZoneSettings.KrakenSettings.IsEnabled}");
-                
-                
-                var isKrakenEnabled = _currentZoneSettings.KrakenSettings.IsEnabled;
-                if (_boundaryManager == null) _boundaryManager = ServiceLocator.Main.Get<IBoundaryManager>();
-                var zoneRadius = _boundaryManager.GetZoneRadius(_currentZoneSettings.ZoneType);
-                _kraken.SetBoundaryManagerAndZoneSettings(isKrakenEnabled, zoneRadius);
-
-                    
-            }
-        }
-
- 
     }
 }

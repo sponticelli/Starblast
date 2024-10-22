@@ -15,10 +15,8 @@ namespace Starblast.Entities.Krakens
         [Header("Settings")]
         [SerializeField] private float _attackRange = 10f;
         [SerializeField] private float _movementSpeed = 2f;
-        [SerializeField] private float _rotationSpeed = 2f;
+        [SerializeField] private float _additionalDistance = 150f;
         
-        public float MovementSpeed => _movementSpeed;
-        public float RotationSpeed => _rotationSpeed;
         
         private PlayerController _player;
         
@@ -71,15 +69,16 @@ namespace Starblast.Entities.Krakens
             {
                 var krakenPosition = transform.position;
                 var distance = krakenPosition.magnitude;
+                var playerDistance = _player.transform.position.magnitude;
                 
-                if (distance > _zoneRadius)
+                if (playerDistance > _zoneRadius)
                 {
                     _target = _player.transform.position;
                 }
                 else
                 {
-                    var target = transform.position;
-                    target += krakenPosition.normalized * _zoneRadius;
+                    var target = Vector3.zero;
+                    target += krakenPosition.normalized * (_zoneRadius + _additionalDistance);
                     _target = target;
                 }
             }
