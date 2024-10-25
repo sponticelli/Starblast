@@ -1,8 +1,10 @@
 using System;
 using Starblast.Entities.Krakens;
+using Starblast.Entities.MeteorFalls;
 using Starblast.Extensions;
 using Starblast.Player;
 using Starblast.Services;
+using Starblast.Utils;
 using UnityEngine;
  
 namespace Starblast.Environments.Boundaries
@@ -15,12 +17,24 @@ namespace Starblast.Environments.Boundaries
             public bool IsEnabled;
             public float RadiusOffset;
         }
+        
+        [Serializable]
+        public class MeteorFallSettings
+        {
+            public bool IsEnabled;
+            public float _distanceFromPlayer;
+            public float _frequency;
+            public FloatRange _speed;
+            public FloatRange _lifeTime;
+            public FloatRange _quantity;
+        }
 
         [Serializable]
         public class ZoneSettings
         {
             public ZoneType ZoneType;
             public KrakenSettings KrakenSettings;
+            public MeteorFallSettings MeteorFallSettings;
         }
         
         [Header("Settings")] 
@@ -28,15 +42,45 @@ namespace Starblast.Environments.Boundaries
 
         private ZoneSettings _currentZoneSettings = null;
         private KrakenController _kraken;
+        private MeteorFallManager _meteorFall;
         private IBoundaryManager _boundaryManager;
         private PlayerController _player;
+        
+        private float _meteorTimer;
         
         private void Start()
         {
             _boundaryManager = ServiceLocator.Main.Get<IBoundaryManager>();
+            _meteorFall = ServiceLocator.Main.Get<MeteorFallManager>();
             _currentZoneSettings = null;
         }
-        
+
+
+        private void Update()
+        {
+            if (_currentZoneSettings == null) return;
+            UpdateMeteorFall();
+        }
+
+        private void UpdateMeteorFall()
+        {
+            if (_currentZoneSettings.MeteorFallSettings.IsEnabled)
+            {
+                _meteorTimer += Time.deltaTime;
+                if (_meteorTimer >= _currentZoneSettings.MeteorFallSettings._frequency)
+                {
+                    _meteorTimer = 0;
+                    var playerPosition = _player.transform.position;
+                    var position = playerPosition + playerPosition.normalized * _currentZoneSettings.MeteorFallSettings._distanceFromPlayer;
+                    var direction = (playerPosition - position).normalized;
+                    _meteorFall.Spawn(position, direction, 
+                        _currentZoneSettings.MeteorFallSettings._speed, 
+                        _currentZoneSettings.MeteorFallSettings._lifeTime, 
+                        _currentZoneSettings.MeteorFallSettings._quantity);
+                }
+            }
+        }
+
         public void ResetEffects()
         {
             

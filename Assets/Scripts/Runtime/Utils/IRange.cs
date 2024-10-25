@@ -36,5 +36,10 @@ namespace Starblast.Utils
             Min = min;
             Max = max;
         }
+        
+        public virtual T RandomValue()
+        {
+            return default;
+        }
     }
 }

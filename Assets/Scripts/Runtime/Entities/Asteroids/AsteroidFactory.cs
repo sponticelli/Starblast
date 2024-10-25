@@ -57,6 +57,7 @@ namespace Starblast.Entities.Asteroids
             
             Asteroid prefab = info.prefabs[UnityEngine.Random.Range(0, info.prefabs.Length)];
             var asteroid = poolManager.GetPooledObject(prefab.gameObject);
+            asteroid.transform.parent = transform;
             asteroid.transform.position = spawnPosition;
             asteroid.SetActive(true);
         }
