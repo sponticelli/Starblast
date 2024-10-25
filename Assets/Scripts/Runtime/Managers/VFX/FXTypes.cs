@@ -4,6 +4,7 @@ namespace Starblast.Environments
     {
         ExplosionBig,
         ExplosionSmall,
-        Hit
+        Hit,
+        MeteorExplosion,
     }
 }

@@ -59,10 +59,16 @@ namespace Starblast.Entities.MeteorFalls
             onDestroyed?.Invoke();
             if (_pooledObject == null)
             {
+                Debug.Log("Destroying " + gameObject.name);
                 Destroy(gameObject);
                 return;
             }
             _pooledObject.ReturnToPool();
+        }
+
+        private void OnDestroy()
+        {
+            Debug.Log("Destroyed " + gameObject.name);
         }
     }
 }

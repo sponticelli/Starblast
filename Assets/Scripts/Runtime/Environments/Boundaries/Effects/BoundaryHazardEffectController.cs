@@ -9,7 +9,7 @@ using UnityEngine;
  
 namespace Starblast.Environments.Boundaries
 {
-    public class BoundaryEnemyEffectController : MonoBehaviour, IBoundaryEnemyEffectController
+    public class BoundaryHazardEffectController : MonoBehaviour, IBoundaryEnemyEffectController
     {
         [Serializable]
         public class KrakenSettings
