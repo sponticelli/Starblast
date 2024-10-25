@@ -1616,10 +1616,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.020522388
-    y: 0.53067994
-    width: 0.49751243
-    height: 0.49751243
+    x: 0
+    y: 0
+    width: 1
+    height: 1
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 10
@@ -5017,7 +5017,7 @@ GameObject:
   - component: {fileID: 1344255684}
   - component: {fileID: 1344255683}
   m_Layer: 0
-  m_Name: EnemyEffectController
+  m_Name: HazardEffectController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
